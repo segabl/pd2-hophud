@@ -13,7 +13,8 @@ if not MyHUD then
     ["lib/managers/menu/contractboxgui"] = "contractboxgui.lua",
     ["lib/network/handlers/unitnetworkhandler"] = "unitnetworkhandler.lua",
     ["lib/units/contourext"] = "contourext.lua",
-    ["lib/units/enemies/cop/copdamage"] = "copdamage.lua"
+    ["lib/units/enemies/cop/copdamage"] = "copdamage.lua",
+    ["lib/units/equipment/sentry_gun/sentrygundamage"] = "sentrygundamage.lua"
   }
   
   MyHUD.damage_pops = {}
@@ -46,7 +47,7 @@ if not MyHUD then
     self._created_t = MyHUD._t
     self._lifetime = 1
   end
-
+  
   function DamagePop:update(t, cam, cam_forward)
     if self.dead then
       return
@@ -62,9 +63,9 @@ if not MyHUD then
     mvector3.set(screen_pos, MyHUD._ws:world_to_screen(cam, world_pos))
     mvector3.subtract(world_pos, cam:position())
     mvector3.normalize(world_pos)
-    local offset = math.max(0, 0.75 - f)
-    self._panel:set_center(screen_pos.x, screen_pos.y + 4 * offset * offset * self._panel:h())
-    self._panel:set_alpha(math.min(1, 1.5 * (1 - f)))
+    local _f = math.min(f * 1.5, 1)
+    self._panel:set_center(screen_pos.x, screen_pos.y - 2 * self._panel:h() * (math.pow(_f - 1, 3) + 1))
+    self._panel:set_alpha(1.5 * (1 - f))
     self._panel:set_visible(mvector3.dot(cam_forward, world_pos) >= 0)
   end
 
@@ -73,18 +74,6 @@ if not MyHUD then
   end
 
   function MyHUD:add_damage_pop(unit, info)
-    if not alive(unit) or not info or not info.damage or info.damage == 0 then
-      return
-    end
-    local col_ray = info.col_ray or {}
-    local pos = Vector3()
-    mvector3.set(pos, col_ray.position or info.pos or col_ray.hit_position or unit:position())
-    mvector3.set_z(pos, mvector3.z(pos) + 30)
-    local unit_damage = unit:character_damage()
-    local unit_base = unit:base()
-    local is_head = unit_damage.is_head and unit_damage:is_head(col_ray.body)
-    local is_kill = unit_damage._dead or unit_damage._health <= 0
-    local is_special = unit_base._tweak_table and tweak_data.character[unit_base._tweak_table] and tweak_data.character[unit_base._tweak_table].priority_shout
     local attacker = info.attacker_unit
     local attacker_base = alive(attacker) and attacker:base()
     if attacker_base then
@@ -92,13 +81,26 @@ if not MyHUD then
       local owner = attacker_base._owner or attacker_base.get_owner and attacker_base:get_owner()
       attacker = thrower or owner or attacker
     end
+    -- only show dmg pop if the attacker is on criminal team
+    local attacker_team = alive(attacker) and attacker:movement() and attacker:movement():team()
+    if attacker_team and attacker_team.id ~= "criminal1" and not attacker_team.friends.criminal1 then
+      return
+    end
+    local col_ray = info.col_ray or {}
+    local pos = col_ray.position or info.pos or col_ray.hit_position or unit:position()
+    local unit_damage = unit:character_damage()
+    local unit_base = unit:base()
+    local is_head = unit_damage.is_head and unit_damage:is_head(col_ray.body)
+    local is_kill = unit_damage._dead
+    local is_special = unit_base._tweak_table and tweak_data.character[unit_base._tweak_table] and tweak_data.character[unit_base._tweak_table].priority_shout
     local color_id = attacker and managers.criminals:character_color_id_by_unit(attacker)
+
     local pop = DamagePop:new(pos, info.damage * 10, is_head, is_kill, is_special, color_id and color_id < #tweak_data.chat_colors and tweak_data.chat_colors[color_id])
     self.damage_pops[self.damage_pop_key] = pop
     self.damage_pop_key = (self.damage_pop_key < 10000 and self.damage_pop_key or 0) + 1
   end
   
-  function MyHUD:check_create_panel()
+  function MyHUD:init()
     self._ws = managers.hud._workspace
     self._panel = self._panel or self._ws:panel({ name = "MyHUD" })
   end

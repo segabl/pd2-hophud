@@ -1,7 +1,8 @@
 local _on_damage_received_original = CopDamage._on_damage_received
 function CopDamage:_on_damage_received(damage_info, ...)
-  if not managers.groupai:state():is_enemy_converted_to_criminal(self._unit) then
+  local result = _on_damage_received_original(self, damage_info, ...)
+  if damage_info.damage and type(damage_info.damage) == "number" and damage_info.damage > 0 then
     MyHUD:add_damage_pop(self._unit, damage_info)
   end
-  return _on_damage_received_original(self, damage_info, ...)
+  return result
 end

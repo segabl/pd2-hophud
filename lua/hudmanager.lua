@@ -1,7 +1,7 @@
 local init_finalize_original = HUDManager.init_finalize
 function HUDManager:init_finalize(...)
   init_finalize_original(self, ...)
-  MyHUD:check_create_panel()
+  MyHUD:init()
 end
 
 function HUDManager:update_name_label_by_peer(peer)
