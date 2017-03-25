@@ -101,7 +101,7 @@ if not MyHUD then
   end
   
   function MyHUD:init()
-    self._ws = managers.hud._workspace
+	self._ws = managers.hud._workspace
     self._panel = self._panel or self._ws:panel({ name = "MyHUD" })
   end
 
