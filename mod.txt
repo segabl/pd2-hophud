@@ -11,6 +11,7 @@
     { "hook_id" : "lib/managers/hud/hudlootscreen", "script_path" : "myhud.lua" },
     { "hook_id" : "lib/managers/hud/hudmissionbriefing", "script_path" : "myhud.lua" },
     { "hook_id" : "lib/managers/menu/contractboxgui", "script_path" : "myhud.lua" },
+    { "hook_id" : "lib/managers/menu/lobbycharacterdata", "script_path" : "myhud.lua" },
     { "hook_id" : "lib/network/handlers/unitnetworkhandler", "script_path" : "myhud.lua" },
     { "hook_id" : "lib/units/contourext", "script_path" : "myhud.lua" },
     { "hook_id" : "lib/units/enemies/cop/copdamage", "script_path" : "myhud.lua" },

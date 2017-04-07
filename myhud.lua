@@ -11,6 +11,7 @@ if not MyHUD then
     ["lib/managers/hud/hudlootscreen"] = "hudlootscreen.lua",
     ["lib/managers/hud/hudmissionbriefing"] = "hudmissionbriefing.lua",
     ["lib/managers/menu/contractboxgui"] = "contractboxgui.lua",
+    ["lib/managers/menu/lobbycharacterdata"] = "lobbycharacterdata.lua",
     ["lib/network/handlers/unitnetworkhandler"] = "unitnetworkhandler.lua",
     ["lib/units/contourext"] = "contourext.lua",
     ["lib/units/enemies/cop/copdamage"] = "copdamage.lua",
