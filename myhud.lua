@@ -84,7 +84,7 @@ if not MyHUD then
     end
     -- only show dmg pop if the attacker is on criminal team
     local attacker_team = alive(attacker) and attacker:movement() and attacker:movement():team()
-    if attacker_team and attacker_team.id ~= "criminal1" and not attacker_team.friends.criminal1 then
+    if not attacker_team or (attacker_team.id ~= "criminal1" and not attacker_team.friends.criminal1) then
       return
     end
     local col_ray = info.col_ray or {}
@@ -94,7 +94,7 @@ if not MyHUD then
     local is_head = unit_damage.is_head and unit_damage:is_head(col_ray.body)
     local is_kill = unit_damage._dead
     local is_special = unit_base._tweak_table and tweak_data.character[unit_base._tweak_table] and tweak_data.character[unit_base._tweak_table].priority_shout
-    local color_id = attacker and managers.criminals:character_color_id_by_unit(attacker)
+    local color_id = alive(attacker) and managers.criminals:character_color_id_by_unit(attacker)
 
     local pop = DamagePop:new(pos, info.damage * 10, is_head, is_kill, is_special, color_id and color_id < #tweak_data.chat_colors and tweak_data.chat_colors[color_id])
     self.damage_pops[self.damage_pop_key] = pop
