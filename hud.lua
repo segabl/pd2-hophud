@@ -1,8 +1,8 @@
-if not MyHUD then
+if not NebbyHUD then
 
-  _G.MyHUD = {}
-  MyHUD.mod_path = ModPath
-  MyHUD.hooks = {
+  _G.NebbyHUD = {}
+  NebbyHUD.mod_path = ModPath
+  NebbyHUD.hooks = {
     ["lib/managers/criminalsmanager"] = "criminalsmanager.lua",
     ["lib/managers/group_ai_states/groupaistatebase"] = "groupaistatebase.lua",
     ["lib/managers/hudmanager"] = "hudmanager.lua",
@@ -18,14 +18,14 @@ if not MyHUD then
     ["lib/units/equipment/sentry_gun/sentrygundamage"] = "sentrygundamage.lua"
   }
   
-  MyHUD.damage_pops = {}
-  MyHUD.damage_pop_key = 1
+  NebbyHUD.damage_pops = {}
+  NebbyHUD.damage_pop_key = 1
   
   local DamagePop = class()
-  MyHUD.DamagePop = DamagePop
+  NebbyHUD.DamagePop = DamagePop
   
   function DamagePop:init(position, damage, is_head, is_kill, is_special, color)
-    self._panel = MyHUD._panel:panel({
+    self._panel = NebbyHUD._panel:panel({
       name = "panel",
       visible = false
     })
@@ -45,7 +45,7 @@ if not MyHUD then
     self._panel:set_size(w, h)
     
     self._position = position
-    self._created_t = MyHUD._t
+    self._created_t = NebbyHUD._t
     self._lifetime = 1
   end
   
@@ -61,7 +61,7 @@ if not MyHUD then
     local screen_pos = Vector3()
     local world_pos = Vector3()
     mvector3.set(world_pos, self._position)
-    mvector3.set(screen_pos, MyHUD._ws:world_to_screen(cam, world_pos))
+    mvector3.set(screen_pos, NebbyHUD._ws:world_to_screen(cam, world_pos))
     mvector3.subtract(world_pos, cam:position())
     mvector3.normalize(world_pos)
     local _f = math.min(f * 1.5, 1)
@@ -71,10 +71,10 @@ if not MyHUD then
   end
 
   function DamagePop:destroy()
-    MyHUD._panel:remove(self._panel)
+    NebbyHUD._panel:remove(self._panel)
   end
 
-  function MyHUD:add_damage_pop(unit, info)
+  function NebbyHUD:add_damage_pop(unit, info)
     local attacker = info.attacker_unit
     local attacker_base = alive(attacker) and attacker:base()
     if attacker_base then
@@ -101,12 +101,12 @@ if not MyHUD then
     self.damage_pop_key = (self.damage_pop_key < 10000 and self.damage_pop_key or 0) + 1
   end
   
-  function MyHUD:init()
+  function NebbyHUD:init()
 	self._ws = managers.hud._workspace
-    self._panel = self._panel or self._ws:panel({ name = "MyHUD" })
+    self._panel = self._panel or self._ws:panel({ name = "NebbyHUD" })
   end
 
-  function MyHUD:update(t, dt)
+  function NebbyHUD:update(t, dt)
     self._t = t
     if self._update_t and t < self._update_t + 0.03 then
       return
@@ -128,13 +128,13 @@ if not MyHUD then
     self._update_t = t
   end
 
-  function MyHUD:rank_and_level_string(rank, level)
+  function NebbyHUD:rank_and_level_string(rank, level)
     local rank_string = rank and rank > 0 and (managers.experience:rank_string(rank) .. "Ї") or ""
     local level_string = level ~= nil and tostring(level) or ""
     return rank_string, level_string
   end
 
-  function MyHUD:set_name_panel_text(text, name, level, rank, color_id)
+  function NebbyHUD:set_name_panel_text(text, name, level, rank, color_id)
     local rank_string, level_string = self:rank_and_level_string(rank, level)
     local name_string = rank_string .. level_string .. " " .. name
     text:set_text(name_string)
@@ -145,7 +145,7 @@ if not MyHUD then
     text:set_range_color(utf8.len(rank_string), utf8.len(rank_string .. level_string), Color.white:with_alpha(0.8))
   end
 
-  function MyHUD:set_teammate_name_panel(panel, name, level, rank, color_id)
+  function NebbyHUD:set_teammate_name_panel(panel, name, level, rank, color_id)
     local rank_string, level_string = self:rank_and_level_string(rank, level)
     local name_string = rank_string .. level_string .. " " .. name
     
@@ -160,7 +160,7 @@ if not MyHUD then
     name:set_range_color(utf8.len(rank_string) + 1, utf8.len(rank_string .. level_string) + 1, Color.white:with_alpha(0.8))
   end
 
-  function MyHUD:information_by_unit(unit)
+  function NebbyHUD:information_by_unit(unit)
     if not unit or not alive(unit) then
       return
     end
@@ -176,7 +176,7 @@ if not MyHUD then
     return name, level, rank, color_id
   end
 
-  function MyHUD:information_by_peer(peer)
+  function NebbyHUD:information_by_peer(peer)
     local local_peer = managers.network:session():local_peer()
     local name = peer == local_peer and local_peer:name() or peer and peer:name() or ""
     local level = peer == local_peer and managers.experience:current_level() or peer and peer:level()
@@ -189,9 +189,9 @@ end
 
 if RequiredScript then
 
-  local requiredScript = RequiredScript:lower()
-  if MyHUD.hooks[requiredScript] then
-    dofile(MyHUD.mod_path .. "lua/" .. MyHUD.hooks[requiredScript])
+  local requiredscript = RequiredScript:lower()
+  if NebbyHUD.hooks[requiredscript] then
+    dofile(NebbyHUD.mod_path .. "lua/" .. NebbyHUD.hooks[requiredscript])
   end
 
 end

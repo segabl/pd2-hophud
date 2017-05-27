@@ -5,8 +5,8 @@ function HUDManager:_add_name_label(data)
   local id = _add_name_label_original(self, data)
   
   local label = self:_get_name_label(id)
-  local _, level, rank, _ = MyHUD:information_by_unit(data.unit)
-  MyHUD:set_name_panel_text(label.text, name, level, rank)
+  local _, level, rank, _ = NebbyHUD:information_by_unit(data.unit)
+  NebbyHUD:set_name_panel_text(label.text, name, level, rank)
   label.panel:child("action"):set_color(Color.white:with_alpha(0.8))
   
   self:align_teammate_name_label(label.panel, label.interact)
@@ -20,8 +20,8 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
   
   local unit = managers.criminals:character_unit_by_name(character_name)
   if unit then
-    local _, level, rank, color_id = MyHUD:information_by_unit(unit)
-    MyHUD:set_teammate_name_panel(self._teammate_panels[id], player_name, level, rank, color_id)
+    local _, level, rank, color_id = NebbyHUD:information_by_unit(unit)
+    NebbyHUD:set_teammate_name_panel(self._teammate_panels[id], player_name, level, rank, color_id)
   end
   
   return id
