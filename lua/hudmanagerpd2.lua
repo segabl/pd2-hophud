@@ -22,6 +22,7 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
   if unit then
     local _, level, rank, color_id = NebbyHUD:information_by_unit(unit)
     NebbyHUD:set_teammate_name_panel(self._teammate_panels[id], player_name, level, rank, color_id)
+    NebbyHUD:create_kill_counter(self._teammate_panels[id])
   end
   
   return id

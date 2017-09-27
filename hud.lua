@@ -146,6 +146,8 @@ if not NebbyHUD then
   end
 
   function NebbyHUD:set_teammate_name_panel(panel, name, level, rank, color_id)
+    name = utf8.len(name) > 16 and name:sub(1, 16) .. "..." or name
+  
     local rank_string, level_string = self:rank_and_level_string(rank, level)
     local name_string = rank_string .. level_string .. " " .. name
     
@@ -158,6 +160,77 @@ if not NebbyHUD then
     end
     name:set_range_color(1, utf8.len(rank_string) + 1, Color.white)
     name:set_range_color(utf8.len(rank_string) + 1, utf8.len(rank_string .. level_string) + 1, Color.white:with_alpha(0.8))
+  end
+  
+  function NebbyHUD:create_kill_counter(panel)
+    local teammate_panel = panel._panel
+    local name = teammate_panel:child("name")
+    local _, _, name_w, _ = name:text_rect()
+
+    if not teammate_panel:child("skull") then
+      local skull = teammate_panel:text({
+        name = "skull",
+        layer = 1,
+        text = "",
+        color = Color.yellow,
+        font_size = tweak_data.hud_players.name_size,
+        font = tweak_data.menu.pd2_medium_font
+      })
+      managers.hud:make_fine_text(skull)
+      local _, _, skull_w, _ = skull:text_rect()
+      skull:set_x(name:left() + name_w + 8)
+      skull:set_center_y(name:center_y())
+      
+      local kills = teammate_panel:text({
+        name = "kills",
+        vertical = "bottom",
+        y = 0,
+        layer = 1,
+        text = "0",
+        color = Color.white,
+        font_size = tweak_data.hud_players.name_size,
+        font = tweak_data.hud_players.name_font
+      })
+      local _, _, kills_w, _ = kills:text_rect()
+      kills:set_x(skull:left() + skull_w)
+      kills:set_bottom(name:bottom())
+      
+      teammate_panel:bitmap({
+        name = "kills_bg",
+        visible = true,
+        layer = 0,
+        texture = "guis/textures/pd2/hud_tabs",
+        texture_rect = { 84, 0, 44, 32 },
+        color = Color.white / 3,
+        x = skull:x() - 2,
+        y = name:y() - 1,
+        w = skull_w + kills_w + 6,
+        h = name:h()
+      })
+    else
+      local skull = teammate_panel:child("skull")
+      local _, _, skull_w, _ = skull:text_rect()
+      skull:set_x(name:left() + name_w + 8)
+      skull:set_center_y(name:center_y())
+      local kills = teammate_panel:child("kills")
+      local _, _, kills_w, _ = kills:text_rect()
+      kills:set_x(skull:left() + skull_w)
+      kills:set_bottom(name:bottom())
+      local kills_bg = teammate_panel:child("kills_bg")
+      kills_bg:set_position(skull:x() - 2, name:y() - 1)
+    end
+  end
+  
+  function NebbyHUD:update_kill_counter(panel, number_kills)
+    local teammate_panel = panel._panel
+    local kills_bg = teammate_panel:child("kills_bg")
+    local kills = teammate_panel:child("kills")
+    local _, _, old_kills_w, _ = kills:text_rect()
+    
+    kills:set_text("" .. (number_kills or kills:text() + 1))
+    local _, _, kills_w, _ = kills:text_rect()
+    
+    kills_bg:set_w(kills_bg:w() - old_kills_w + kills_w)
   end
 
   function NebbyHUD:information_by_unit(unit)

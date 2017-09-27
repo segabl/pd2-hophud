@@ -18,6 +18,7 @@ function HUDManager:reset_player_hpbar()
   reset_player_hpbar_original(self)
   local name, level, rank, color_id = NebbyHUD:information_by_peer(managers.network:session():local_peer())
   NebbyHUD:set_teammate_name_panel(self._teammate_panels[HUDManager.PLAYER_PANEL], name, level, rank, color_id)
+  NebbyHUD:create_kill_counter(self._teammate_panels[HUDManager.PLAYER_PANEL])
 end
 
 local update_original = HUDManager.update
