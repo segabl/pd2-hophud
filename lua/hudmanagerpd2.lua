@@ -1,13 +1,20 @@
 local _add_name_label_original = HUDManager._add_name_label
 function HUDManager:_add_name_label(data)
-  local name = data.name
+
+  -- check for double labels
+  for _, v in ipairs(self._hud.name_labels) do
+    if v.movement == data.unit:movement() then
+      return v.id
+    end
+  end
   
   local id = _add_name_label_original(self, data)
   
   local label = self:_get_name_label(id)
   local _, level, rank, _ = NebbyHUD:information_by_unit(data.unit)
+  local name = data.name
   NebbyHUD:set_name_panel_text(label.text, name, level, rank)
-  label.panel:child("action"):set_color(Color.white:with_alpha(0.8))
+  label.panel:child("action"):set_color(NebbyHUD.colors.action)
   
   self:align_teammate_name_label(label.panel, label.interact)
   
@@ -29,16 +36,18 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
 end
 
 local add_vehicle_name_label_original = HUDManager.add_vehicle_name_label
-function HUDManager:add_vehicle_name_label(...)
-  local id = add_vehicle_name_label_original(self, ...)
+function HUDManager:add_vehicle_name_label(data, ...)
+  local id = add_vehicle_name_label_original(self, data, ...)
   
   local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
   local panel = hud.panel:child("name_label" .. id)
   
+  panel:child("text"):set_text("Vehicle " .. data.name)
   panel:child("text"):set_color(Color.white)
+  panel:child("text"):set_range_color(0, 7, NebbyHUD.colors.level)
   panel:child("bag"):set_color(Color.white)
   panel:child("bag_number"):set_color(Color.white)
-  panel:child("action"):set_color(Color.white:with_alpha(0.8))
+  panel:child("action"):set_color(NebbyHUD.colors.action)
   
   return id
 end

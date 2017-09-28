@@ -20,6 +20,11 @@ if not NebbyHUD then
   
   NebbyHUD.damage_pops = {}
   NebbyHUD.damage_pop_key = 1
+  NebbyHUD.colors = {
+    rank = Color.white,
+    level = Color.white:with_alpha(0.8),
+    action = Color.white:with_alpha(0.8)
+  }
   
   local DamagePop = class()
   NebbyHUD.DamagePop = DamagePop
@@ -139,14 +144,14 @@ if not NebbyHUD then
     local name_string = rank_string .. level_string .. " " .. name
     text:set_text(name_string)
     if color_id and tweak_data.chat_colors[color_id] then
-      text:set_color(tweak_data.chat_colors[color_id])
+      text:set_range_color(0 + utf8.len(rank_string .. level_string), 0 + utf8.len(name_string), tweak_data.chat_colors[color_id])
     end
-    text:set_range_color(0, utf8.len(rank_string), Color.white)
-    text:set_range_color(utf8.len(rank_string), utf8.len(rank_string .. level_string), Color.white:with_alpha(0.8))
+    text:set_range_color(0, 0 + utf8.len(rank_string), NebbyHUD.colors.rank)
+    text:set_range_color(0 + utf8.len(rank_string), 0 + utf8.len(rank_string .. level_string), NebbyHUD.colors.level)
   end
 
   function NebbyHUD:set_teammate_name_panel(panel, name, level, rank, color_id)
-    name = utf8.len(name) > 16 and name:sub(1, 16) .. "..." or name
+    name = utf8.len(name) > 17 and name:sub(1, 17) .. "..." or name
   
     local rank_string, level_string = self:rank_and_level_string(rank, level)
     local name_string = rank_string .. level_string .. " " .. name
@@ -158,8 +163,8 @@ if not NebbyHUD then
       panel:set_callsign(color_id)
       name:set_color(tweak_data.chat_colors[color_id])
     end
-    name:set_range_color(1, utf8.len(rank_string) + 1, Color.white)
-    name:set_range_color(utf8.len(rank_string) + 1, utf8.len(rank_string .. level_string) + 1, Color.white:with_alpha(0.8))
+    name:set_range_color(1, utf8.len(rank_string) + 1, NebbyHUD.colors.rank)
+    name:set_range_color(utf8.len(rank_string) + 1, utf8.len(rank_string .. level_string) + 1, NebbyHUD.colors.level)
   end
   
   function NebbyHUD:create_kill_counter(panel)
@@ -178,7 +183,7 @@ if not NebbyHUD then
       })
       managers.hud:make_fine_text(skull)
       local _, _, skull_w, _ = skull:text_rect()
-      skull:set_x(name:left() + name_w + 8)
+      skull:set_x(name:left() + name_w + 10)
       skull:set_center_y(name:center_y())
       
       local kills = teammate_panel:text({
@@ -210,7 +215,7 @@ if not NebbyHUD then
     else
       local skull = teammate_panel:child("skull")
       local _, _, skull_w, _ = skull:text_rect()
-      skull:set_x(name:left() + name_w + 8)
+      skull:set_x(name:left() + name_w + 10)
       skull:set_center_y(name:center_y())
       local kills = teammate_panel:child("kills")
       local _, _, kills_w, _ = kills:text_rect()
@@ -237,24 +242,28 @@ if not NebbyHUD then
     if not unit or not alive(unit) then
       return
     end
-    local name = unit:base()._tweak_table
-    local level = managers.groupai:state():is_unit_team_AI(unit) and "Bot" or managers.groupai:state():is_enemy_converted_to_criminal(unit) and "Joker"
+    local unit_base = unit:base()
+    local is_team_AI = managers.groupai:state():is_unit_team_AI(unit)
+    local name = unit_base._tweak_table or ""
+    local level = is_team_AI and "Bot" or managers.groupai:state():is_enemy_converted_to_criminal(unit) and "Joker"
     local rank
     local color_id = managers.criminals:character_color_id_by_unit(unit)
-    if unit:base().is_husk_player then
+    if unit_base.is_husk_player or unit_base.is_local_player then
       name = unit:network():peer():name()
-      level = unit:network():peer():level()
-      rank = unit:network():peer():rank()
+      level = unit_base.is_local_player and managers.experience:current_level() or unit:network():peer():level()
+      rank = unit_base.is_local_player and managers.experience:current_rank() or unit:network():peer():rank()
+    elseif is_team_AI then
+      name = unit_base:nick_name()
     end
     return name, level, rank, color_id
   end
 
   function NebbyHUD:information_by_peer(peer)
     local local_peer = managers.network:session():local_peer()
-    local name = peer == local_peer and local_peer:name() or peer and peer:name() or ""
+    local name = peer and peer:name() or ""
     local level = peer == local_peer and managers.experience:current_level() or peer and peer:level()
     local rank = peer == local_peer and managers.experience:current_rank() or peer and peer:rank()
-    local color_id = peer == local_peer and local_peer:id() or peer and peer:id() or 1
+    local color_id = peer and peer:id() or 1
     return name, level, rank, color_id
   end
 
