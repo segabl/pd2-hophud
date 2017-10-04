@@ -107,8 +107,9 @@ if not NebbyHUD then
   end
   
   function NebbyHUD:init()
-	self._ws = managers.hud._workspace
-    self._panel = self._panel or self._ws:panel({ name = "NebbyHUD" })
+    local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
+    self._ws = managers.hud._workspace
+    self._panel = self._panel or hud and hud.panel or self._ws:panel({ name = "NebbyHUD" })
   end
 
   function NebbyHUD:update(t, dt)
