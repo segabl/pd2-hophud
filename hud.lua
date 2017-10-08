@@ -55,12 +55,11 @@ if not NebbyHUD then
   end
   
   function DamagePop:update(t, cam, cam_forward)
-    if self.dead then
-      return
-    end
     local f = (t - self._created_t) / self._lifetime
     if f > 1 then
-      self.dead = true
+      if not self.dead then
+        self:destroy()
+      end
       return
     end
     local screen_pos = Vector3()
@@ -77,6 +76,7 @@ if not NebbyHUD then
 
   function DamagePop:destroy()
     NebbyHUD._panel:remove(self._panel)
+    self.dead = true
   end
 
   function NebbyHUD:add_damage_pop(unit, info)
@@ -102,8 +102,11 @@ if not NebbyHUD then
     local color_id = alive(attacker) and managers.criminals:character_color_id_by_unit(attacker)
 
     local pop = DamagePop:new(pos, info.damage * 10, is_head, is_kill, is_special, color_id and color_id < #tweak_data.chat_colors and tweak_data.chat_colors[color_id])
+    if self.damage_pops[self.damage_pop_key] then
+      self.damage_pops[self.damage_pop_key]:destroy()
+    end
     self.damage_pops[self.damage_pop_key] = pop
-    self.damage_pop_key = (self.damage_pop_key < 10000 and self.damage_pop_key or 0) + 1
+    self.damage_pop_key = (self.damage_pop_key < 100 and self.damage_pop_key or 0) + 1
   end
   
   function NebbyHUD:init()
@@ -125,7 +128,6 @@ if not NebbyHUD then
     mrotation.y(cam:rotation(), cam_forward)
     for _, pop in pairs(self.damage_pops) do
       if pop.dead then
-        pop:destroy()
         pop = nil
       else
         pop:update(t, cam, cam_forward)
@@ -152,7 +154,7 @@ if not NebbyHUD then
   end
 
   function NebbyHUD:set_teammate_name_panel(panel, name, level, rank, color_id)
-    name = utf8.len(name) > 17 and name:sub(1, 17) .. "..." or name
+    name = utf8.len(name) > 16 and name:sub(1, 16) .. "..." or name
   
     local rank_string, level_string = self:rank_and_level_string(rank, level)
     local name_string = rank_string .. level_string .. " " .. name
