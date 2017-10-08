@@ -1,20 +1,25 @@
 local _add_name_label_original = HUDManager._add_name_label
 function HUDManager:_add_name_label(data)
 
+  local id
+
   -- check for double labels
   for _, v in ipairs(self._hud.name_labels) do
     if v.movement == data.unit:movement() then
-      return v.id
+      id = v.id
+      break
     end
   end
   
-  local id = _add_name_label_original(self, data)
+  local name = data.name
+  local id = id or _add_name_label_original(self, data)
   
   local label = self:_get_name_label(id)
   local _, level, rank, _ = NebbyHUD:information_by_unit(data.unit)
-  local name = data.name
   NebbyHUD:set_name_panel_text(label.text, name, level, rank)
   label.panel:child("action"):set_color(NebbyHUD.colors.action)
+  
+  data.name = label.text:text()
   
   self:align_teammate_name_label(label.panel, label.interact)
   
