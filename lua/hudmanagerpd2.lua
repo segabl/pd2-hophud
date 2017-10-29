@@ -11,15 +11,14 @@ function HUDManager:_add_name_label(data)
     end
   end
   
-  local name = data.name
   local id = id or _add_name_label_original(self, data)
   
   local label = self:_get_name_label(id)
-  local _, level, rank, _ = NebbyHUD:information_by_unit(data.unit)
-  NebbyHUD:set_name_panel_text(label.text, name, level, rank)
+  local name, level, rank, color_id = NebbyHUD:information_by_unit(data.unit)
+  NebbyHUD:set_name_panel_text(label.text, name, level, rank, color_id)
   label.panel:child("action"):set_color(NebbyHUD.colors.action)
   
-  data.name = label.text:text()
+  data.name = name
   
   self:align_teammate_name_label(label.panel, label.interact)
   

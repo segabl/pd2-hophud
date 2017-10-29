@@ -245,28 +245,33 @@ if not NebbyHUD then
     if not unit or not alive(unit) then
       return
     end
+    local gstate = managers.groupai:state()
+    local unit_info = KillFeed and KillFeed:get_unit_information(unit)
     local unit_base = unit:base()
-    local is_team_AI = managers.groupai:state():is_unit_team_AI(unit)
-    local name = unit_base._tweak_table or ""
-    local level = is_team_AI and "Bot" or managers.groupai:state():is_enemy_converted_to_criminal(unit) and "Joker"
+    local name = unit_info and unit_info.name or unit_base.nick_name and unit_base:nick_name() or unit_base._tweak_table or ""
+    local level = gstate:is_unit_team_AI(unit) and "Bot" or gstate:is_enemy_converted_to_criminal(unit) and "Joker"
     local rank
     local color_id = managers.criminals:character_color_id_by_unit(unit)
     if unit_base.is_husk_player or unit_base.is_local_player then
-      name = unit:network():peer():name()
+      name = unit_base.is_local_player and managers.network.account:username() or unit:network():peer():name()
       level = unit_base.is_local_player and managers.experience:current_level() or unit:network():peer():level()
       rank = unit_base.is_local_player and managers.experience:current_rank() or unit:network():peer():rank()
-    elseif is_team_AI then
-      name = unit_base:nick_name()
     end
     return name, level, rank, color_id
   end
 
   function NebbyHUD:information_by_peer(peer)
-    local local_peer = managers.network:session():local_peer()
-    local name = peer and peer:name() or ""
-    local level = peer == local_peer and managers.experience:current_level() or peer and peer:level()
-    local rank = peer == local_peer and managers.experience:current_rank() or peer and peer:rank()
-    local color_id = peer and peer:id() or 1
+    local name, level, rank, color_id
+    if not managers.network:session() or managers.network:session():local_peer() == peer then
+      name = managers.network.account:username() or ""
+      level = managers.experience:current_level()
+      rank = managers.experience:current_rank()
+    else
+      name = peer and peer:name() or ""
+      level = peer and peer:level()
+      rank = peer and peer:rank()
+    end
+    color_id = peer and peer:id() or 1
     return name, level, rank, color_id
   end
 
