@@ -1,5 +1,7 @@
 if not NebbyHUD then
 
+  tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
+
   _G.NebbyHUD = {}
   NebbyHUD.mod_path = ModPath
   NebbyHUD.hooks = {
@@ -39,7 +41,7 @@ if not NebbyHUD then
       name = "text",
       text = damage_text,
       font = tweak_data.menu.pd2_medium_font,
-      font_size = 24,
+      font_size = tweak_data.hud.name_label_font_size,
       color = color or Color.white,
       layer = 100
     })
@@ -161,7 +163,7 @@ if not NebbyHUD then
     
     local name = panel._panel:child("name")
     
-    panel:set_name(name_string)   
+    panel:set_name(name_string)
     if color_id and tweak_data.chat_colors[color_id] then
       panel:set_callsign(color_id)
       name:set_color(tweak_data.chat_colors[color_id])
@@ -249,7 +251,7 @@ if not NebbyHUD then
     local unit_info = KillFeed and KillFeed:get_unit_information(unit)
     local unit_base = unit:base()
     local name = unit_info and unit_info.name or unit_base.nick_name and unit_base:nick_name() or unit_base._tweak_table or ""
-    local level = gstate:is_unit_team_AI(unit) and "Bot" or gstate:is_enemy_converted_to_criminal(unit) and "Joker"
+    local level = gstate:is_unit_team_AI(unit) and "Bot" or unit_base.kpr_minion_owner_peer_id and "Joker"
     local rank
     local color_id = managers.criminals:character_color_id_by_unit(unit)
     if unit_base.is_husk_player or unit_base.is_local_player then

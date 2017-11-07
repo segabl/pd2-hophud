@@ -17,7 +17,6 @@ function HUDManager:_add_name_label(data)
   local name, level, rank, color_id = NebbyHUD:information_by_unit(data.unit)
   NebbyHUD:set_name_panel_text(label.text, name, level, rank, color_id)
   label.panel:child("action"):set_color(NebbyHUD.colors.action)
-  
   data.name = name
   
   self:align_teammate_name_label(label.panel, label.interact)
@@ -54,4 +53,48 @@ function HUDManager:add_vehicle_name_label(data, ...)
   panel:child("action"):set_color(NebbyHUD.colors.action)
   
   return id
+end
+
+function HUDManager:align_teammate_name_label(panel, interact)
+  local double_radius = interact:radius() * 2
+  local text = panel:child("text")
+  local action = panel:child("action")
+  local bag = panel:child("bag")
+  local bag_number = panel:child("bag_number")
+  local cheater = panel:child("cheater")
+  local _, _, tw, th = text:text_rect()
+  local _, _, aw, ah = action:text_rect()
+  local _, _, cw, ch = cheater:text_rect()
+
+  panel:set_size(math.max(tw, cw) + 4 + double_radius, math.max(th + ah + ch, double_radius))
+  text:set_size(panel:w(), th)
+  action:set_size(panel:w(), ah)
+  cheater:set_size(tw, ch)
+  text:set_x(double_radius + 4)
+  action:set_x(double_radius + 4)
+  cheater:set_x(double_radius + 4)
+  text:set_top(cheater:bottom())
+  action:set_top(text:bottom())
+  bag:set_center_y(text:center_y())
+  interact:set_position(0, text:top())
+
+  local infamy = panel:child("infamy")
+
+  if infamy then
+    panel:set_w(panel:w() + infamy:w())
+    text:set_size(panel:size())
+    infamy:set_x(double_radius + 4)
+    infamy:set_top(text:top())
+    text:set_x(double_radius + 4 + infamy:w())
+  end
+
+  if bag_number then
+    bag_number:set_bottom(text:bottom() - 1)
+    panel:set_w(panel:w() + bag_number:w() + bag:w() + 8)
+    bag:set_right(panel:w() - bag_number:w())
+    bag_number:set_right(panel:w() + 2)
+  else
+    panel:set_w(panel:w() + bag:w() + 4)
+    bag:set_right(panel:w())
+  end
 end
