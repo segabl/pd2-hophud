@@ -56,7 +56,6 @@ function HUDManager:add_vehicle_name_label(data, ...)
 end
 
 function HUDManager:align_teammate_name_label(panel, interact)
-  local double_radius = interact:radius() * 2
   local text = panel:child("text")
   local action = panel:child("action")
   local bag = panel:child("bag")
@@ -65,26 +64,35 @@ function HUDManager:align_teammate_name_label(panel, interact)
   local _, _, tw, th = text:text_rect()
   local _, _, aw, ah = action:text_rect()
   local _, _, cw, ch = cheater:text_rect()
-
+  local double_radius = th + ah
+  if interact:radius() ~= double_radius / 2 then
+    interact._radius = double_radius / 2
+    interact._circle:set_size(double_radius, double_radius)
+    if interact._bg_circle then
+      interact._bg_circle:set_size(double_radius, double_radius)
+    end
+  end
+  
   panel:set_size(math.max(tw, cw) + 4 + double_radius, math.max(th + ah + ch, double_radius))
-  text:set_size(panel:w(), th)
+  text:set_size(tw, th)
   action:set_size(panel:w(), ah)
-  cheater:set_size(tw, ch)
+  cheater:set_size(cw, ch)
   text:set_x(double_radius + 4)
   action:set_x(double_radius + 4)
   cheater:set_x(double_radius + 4)
   text:set_top(cheater:bottom())
   action:set_top(text:bottom())
+  bag:set_size(th * (bag:w() / bag:h()) * 0.75, th * 0.75)
   bag:set_center_y(text:center_y())
   interact:set_position(0, text:top())
 
   local infamy = panel:child("infamy")
-
   if infamy then
+    infamy:set_size(th * (infamy:w() / infamy:h()), th)
+    infamy:set_x(double_radius + 4)
+    infamy:set_center_y(text:center_y() + infamy:h() / 8 - 1)
     panel:set_w(panel:w() + infamy:w())
     text:set_size(panel:size())
-    infamy:set_x(double_radius + 4)
-    infamy:set_top(text:top())
     text:set_x(double_radius + 4 + infamy:w())
   end
 
