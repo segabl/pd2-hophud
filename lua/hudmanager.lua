@@ -7,7 +7,8 @@ end
 function HUDManager:update_name_label_by_peer(peer)
   for _, data in pairs(self._hud.name_labels) do
     if data.peer_id == peer:id() then
-      NebbyHUD:set_name_panel_text(data.text, data.character_name, peer:level(), peer:rank())
+      local name, level, rank, color_id = NebbyHUD:information_by_peer(peer)
+      NebbyHUD:set_name_panel_text(data.text, name, level, rank)
       self:align_teammate_name_label(data.panel, data.interact)
     end
   end
@@ -18,7 +19,7 @@ function HUDManager:reset_player_hpbar()
   reset_player_hpbar_original(self)
   local name, level, rank, color_id = NebbyHUD:information_by_peer(managers.network:session():local_peer())
   NebbyHUD:set_teammate_name_panel(self._teammate_panels[HUDManager.PLAYER_PANEL], name, level, rank, color_id)
-  NebbyHUD:create_kill_counter(self._teammate_panels[HUDManager.PLAYER_PANEL])
+  NebbyHUD:create_kill_counter(self._teammate_panels[HUDManager.PLAYER_PANEL], managers.statistics:session_total_kills() - managers.statistics:session_total_civilian_kills())
 end
 
 local update_original = HUDManager.update
@@ -27,7 +28,7 @@ function HUDManager:update(...)
   NebbyHUD:update(...)
 end
 
-function HUDManager:update_vehicle_label_by_id(label_id, num_players)
+function HUDManager:update_vehicle_label_by_id(label_id)
   for _, data in pairs(self._hud.name_labels) do
     if data.id == label_id then
       local vehicle_text = "Vehicle " .. data.character_name

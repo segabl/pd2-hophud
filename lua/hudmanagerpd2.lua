@@ -52,6 +52,8 @@ function HUDManager:add_vehicle_name_label(data, ...)
   panel:child("bag_number"):set_color(Color.white)
   panel:child("action"):set_color(NebbyHUD.colors.action)
   
+  self:update_vehicle_label_by_id(id)
+  
   return id
 end
 
