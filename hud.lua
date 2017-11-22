@@ -14,6 +14,7 @@ if not NebbyHUD then
     ["lib/managers/hud/hudmissionbriefing"] = "hudmissionbriefing.lua",
     ["lib/managers/menu/contractboxgui"] = "contractboxgui.lua",
     ["lib/managers/menu/lobbycharacterdata"] = "lobbycharacterdata.lua",
+    ["lib/managers/menu/playerprofileguiobject"] = "playerprofileguiobject.lua",
     ["lib/network/handlers/unitnetworkhandler"] = "unitnetworkhandler.lua",
     ["lib/units/contourext"] = "contourext.lua",
     ["lib/units/enemies/cop/copdamage"] = "copdamage.lua",
@@ -146,7 +147,7 @@ if not NebbyHUD then
 
   function NebbyHUD:set_name_panel_text(text, name, level, rank, color_id)
     local rank_string, level_string = self:rank_and_level_string(rank, level)
-    local name_string = rank_string .. level_string .. " " .. name
+    local name_string = rank_string .. level_string .. " " .. tostring(name)
     text:set_text(name_string)
     if color_id and tweak_data.chat_colors[color_id] then
       text:set_range_color(0 + utf8.len(rank_string .. level_string), 0 + utf8.len(name_string), tweak_data.chat_colors[color_id])
@@ -187,7 +188,8 @@ if not NebbyHUD then
         font = tweak_data.menu.pd2_medium_font
       })
       managers.hud:make_fine_text(skull)
-      local _, _, skull_w, _ = skull:text_rect()
+      local _, _, skull_w, skull_h = skull:text_rect()
+      skull:set_size(skull_w, skull_h)
       skull:set_x(name:left() + name_w + 10)
       skull:set_center_y(name:center_y())
       
@@ -201,7 +203,8 @@ if not NebbyHUD then
         font_size = tweak_data.hud_players.name_size,
         font = tweak_data.hud_players.name_font
       })
-      local _, _, kills_w, _ = kills:text_rect()
+      local _, _, kills_w, kills_h = kills:text_rect()
+      kills:set_size(kills_w, kills_h)
       kills:set_x(skull:left() + skull_w)
       kills:set_bottom(name:bottom())
       
@@ -223,7 +226,8 @@ if not NebbyHUD then
       skull:set_x(name:left() + name_w + 10)
       skull:set_center_y(name:center_y())
       local kills = teammate_panel:child("kills")
-      local _, _, kills_w, _ = kills:text_rect()
+      local _, _, kills_w, kills_h = kills:text_rect()
+      kills:set_size(kills_w, kills_h)
       kills:set_x(skull:left() + skull_w)
       kills:set_bottom(name:bottom())
       local kills_bg = teammate_panel:child("kills_bg")
@@ -238,7 +242,8 @@ if not NebbyHUD then
     local _, _, old_kills_w, _ = kills:text_rect()
     
     kills:set_text("" .. (number_kills or kills:text() + 1))
-    local _, _, kills_w, _ = kills:text_rect()
+    local _, _, kills_w, kills_h = kills:text_rect()
+    kills:set_size(kills_w, kills_h)
     
     kills_bg:set_w(kills_bg:w() - old_kills_w + kills_w)
   end

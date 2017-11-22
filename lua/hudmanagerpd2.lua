@@ -84,13 +84,13 @@ function HUDManager:align_teammate_name_label(panel, interact)
   cheater:set_x(double_radius + 4)
   text:set_top(cheater:bottom())
   action:set_top(text:bottom())
-  bag:set_size(th * (bag:w() / bag:h()) * 0.75, th * 0.75)
-  bag:set_center_y(text:center_y())
+  bag:set_size(ch * (bag:w() / bag:h()) * 0.75, ch * 0.75)
+  bag:set_top(text:top() + 2)
   interact:set_position(0, text:top())
 
   local infamy = panel:child("infamy")
   if infamy then
-    infamy:set_size(th * (infamy:w() / infamy:h()), th)
+    infamy:set_size(ch * (infamy:w() / infamy:h()), ch)
     infamy:set_x(double_radius + 4)
     infamy:set_center_y(text:center_y() + infamy:h() / 8 - 1)
     panel:set_w(panel:w() + infamy:w())
@@ -99,7 +99,7 @@ function HUDManager:align_teammate_name_label(panel, interact)
   end
 
   if bag_number then
-    bag_number:set_bottom(text:bottom() - 1)
+    bag_number:set_top(text:top())
     panel:set_w(panel:w() + bag_number:w() + bag:w() + 8)
     bag:set_right(panel:w() - bag_number:w())
     bag_number:set_right(panel:w() + 2)
