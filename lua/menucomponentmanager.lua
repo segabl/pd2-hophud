@@ -2,6 +2,13 @@ local panel_padding = 12
 local font = tweak_data.menu.pd2_medium_font
 local font_size = tweak_data.menu.pd2_small_font_size
 
+local SPOT_W = 32
+local SPOT_H = 8
+local BAR_W = 32
+local BAR_H = 6
+local BAR_X = (SPOT_W - BAR_W) / 2
+local BAR_Y = 0
+
 function BLTNotificationsGui:_setup()
 
   self._enabled = true
@@ -14,9 +21,8 @@ function BLTNotificationsGui:_setup()
     w = profile_panel:w(),
     h = font_size * 4 + panel_padding * 2
   })
-  self._panel:set_left( profile_panel:left() )
-  self._panel:set_bottom( profile_panel:top() )
-  -- BoxGuiObject:new( self._panel:panel({ layer = 100 }), { sides = { 1, 1, 1, 1 } } )
+  self._panel:set_left(profile_panel:left())
+  self._panel:set_bottom(profile_panel:top())
 
   self._content_panel = self._panel:panel({
     h = self._panel:h() * 0.8,
@@ -25,7 +31,7 @@ function BLTNotificationsGui:_setup()
   self._buttons_panel = self._panel:panel({
     h = self._panel:h() * 0.2,
   })
-  self._buttons_panel:set_top( self._content_panel:h() )
+  self._buttons_panel:set_top(self._content_panel:h())
 
   -- Blur background
   local bg_rect = self._content_panel:rect({
@@ -48,8 +54,8 @@ function BLTNotificationsGui:_setup()
   })
 
   -- Outline
-  BoxGuiObject:new( self._content_panel, { sides = { 1, 1, 1, 1 } } )
-  self._content_outline = BoxGuiObject:new( self._content_panel, { sides = { 2, 2, 2, 2 } } )
+  BoxGuiObject:new(self._content_panel, { sides = { 1, 1, 1, 1 } })
+  self._content_outline = BoxGuiObject:new(self._content_panel, { sides = { 2, 2, 2, 2 } })
 
   -- Setup notification buttons
   self._bar = self._buttons_panel:bitmap({
@@ -62,8 +68,8 @@ function BLTNotificationsGui:_setup()
     w = BAR_W,
     h = BAR_H
   })
-  self:set_bar_width( BAR_W, true )
-  self._bar:set_visible( false )
+  self:set_bar_width(BAR_W, true)
+  self._bar:set_visible(false)
 
   -- Downloads notification
   self._downloads_panel = self._panel:panel({
@@ -92,25 +98,17 @@ function BLTNotificationsGui:_setup()
     vertical = "center",
   })
 
-  self._downloads_panel:set_visible( false )
+  self._downloads_panel:set_visible(false)
 
   -- Move other panels to fit the downloads notification in nicely
-  self._panel:set_w( self._panel:w() + 24 )
-  self._panel:set_h( self._panel:h() + 24 )
-  self._panel:set_top( self._panel:top() - 24 )
-  self._content_panel:set_top( self._content_panel:top() + 24 )
-  self._buttons_panel:set_top( self._buttons_panel:top() + 24 )
+  self._panel:set_w(self._panel:w() + 24)
+  self._panel:set_h(self._panel:h() + 24)
+  self._panel:set_top(self._panel:top() - 24)
+  self._content_panel:set_top(self._content_panel:top() + 24)
+  self._buttons_panel:set_top(self._buttons_panel:top() + 24)
 
   self._downloads_panel:set_righttop(self._panel:w() - 10, 10)
 
-  -- Add notifications that have already been registered
-  for _, notif in ipairs( BLT.Notifications:get_notifications() ) do
-    self:add_notification( notif )
-  end
-
-  -- Check for updates when creating the notification UI as we show the check here
-  BLT.Mods:RunAutoCheckForUpdates()
-  
   if BeardLib then
     self._beardlib_updates = self._panel:panel({
       name = "BeardLibModsManagerPanel",
@@ -141,7 +139,15 @@ function BLTNotificationsGui:_setup()
       vertical = "center"
     }):set_center(icon:center())
   end
-  
+
+  -- Add notifications that have already been registered
+  for _, notif in ipairs(BLT.Notifications:get_notifications()) do
+    self:add_notification(notif)
+  end
+
+  -- Check for updates when creating the notification UI as we show the check here
+  BLT.Mods:RunAutoCheckForUpdates()
+
 end
 
 local update_original = BLTNotificationsGui.update
@@ -150,12 +156,13 @@ function BLTNotificationsGui:update(...)
   if alive(self._beardlib_updates) then
     local count = self._beardlib_updates:child("UpdatesCount")
     if alive(count) then
-      self._beardlib_updates:set_visible(#BeardLib.managers.mods_menu._waiting_for_update > 0)
-      if not self._downloads_panel:visible() then
-        self._beardlib_updates:set_righttop(self._downloads_panel:right(), self._downloads_panel:top())
-      else
-        self._beardlib_updates:set_righttop(self._content_panel:right() - 2, self._content_panel:top() + 2)
-      end
+      count:set_text(tostring(#BeardLib.managers.mods_menu._waiting_for_update))
+    end
+    self._beardlib_updates:set_visible(#BeardLib.managers.mods_menu._waiting_for_update > 0)
+    if not self._downloads_panel:visible() then
+      self._beardlib_updates:set_righttop(self._downloads_panel:right(), self._downloads_panel:top())
+    else
+      self._beardlib_updates:set_righttop(self._content_panel:right() - 2, self._content_panel:top() + 2)
     end
   end
 end
@@ -220,11 +227,11 @@ function BLTNotificationsGui:add_notification(parameters)
   table.sort( self._notifications, function(a, b)
     return a.priority > b.priority
   end )
-  self._notifications_count = table.size( self._notifications )
+  self._notifications_count = table.size(self._notifications)
 
   -- Check notification visibility
   for i, notif in ipairs( self._notifications ) do
-    notif.panel:set_visible( i == 1 )
+    notif.panel:set_visible(i == 1)
   end
   self._current = 1
 
