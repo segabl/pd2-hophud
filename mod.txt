@@ -1,6 +1,6 @@
 {
-  "name" : "Nebby's HUD",
-  "description" : "Nebby's custom HUD",
+  "name" : "HopHUD",
+  "description" : "Shiny Hoppip's custom HUD",
   "author" : "Shiny Hoppip",
   "blt_version" : 2,
   "color" : "0.043 0.808 0.6",

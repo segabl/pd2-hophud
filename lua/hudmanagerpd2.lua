@@ -14,9 +14,9 @@ function HUDManager:_add_name_label(data)
   local id = id or _add_name_label_original(self, data)
   
   local label = self:_get_name_label(id)
-  local name, level, rank, color_id = NebbyHUD:information_by_unit(data.unit)
-  NebbyHUD:set_name_panel_text(label.text, name, level, rank, color_id)
-  label.panel:child("action"):set_color(NebbyHUD.colors.action)
+  local name, level, rank, color_id = HopHUD:information_by_unit(data.unit)
+  HopHUD:set_name_panel_text(label.text, name, level, rank, color_id)
+  label.panel:child("action"):set_color(HopHUD.colors.action)
   data.name = name
   
   self:align_teammate_name_label(label.panel, label.interact)
@@ -30,9 +30,9 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
   
   local unit = managers.criminals:character_unit_by_name(character_name)
   if unit then
-    local _, level, rank, color_id = NebbyHUD:information_by_unit(unit)
-    NebbyHUD:set_teammate_name_panel(self._teammate_panels[id], player_name, level, rank, color_id)
-    NebbyHUD:create_kill_counter(self._teammate_panels[id])
+    local _, level, rank, color_id = HopHUD:information_by_unit(unit)
+    HopHUD:set_teammate_name_panel(self._teammate_panels[id], player_name, level, rank, color_id)
+    HopHUD:create_kill_counter(self._teammate_panels[id])
   end
   
   return id
@@ -47,10 +47,10 @@ function HUDManager:add_vehicle_name_label(data, ...)
   
   panel:child("text"):set_text("Vehicle " .. data.name)
   panel:child("text"):set_color(Color.white)
-  panel:child("text"):set_range_color(0, 7, NebbyHUD.colors.level)
+  panel:child("text"):set_range_color(0, 7, HopHUD.colors.level)
   panel:child("bag"):set_color(Color.white)
   panel:child("bag_number"):set_color(Color.white)
-  panel:child("action"):set_color(NebbyHUD.colors.action)
+  panel:child("action"):set_color(HopHUD.colors.action)
   
   self:update_vehicle_label_by_id(id)
   

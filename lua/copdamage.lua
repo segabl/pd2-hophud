@@ -2,7 +2,7 @@ local _on_damage_received_original = CopDamage._on_damage_received
 function CopDamage:_on_damage_received(damage_info, ...)
   local result = _on_damage_received_original(self, damage_info, ...)
   if type(damage_info.damage) == "number" and damage_info.damage > 0 then
-    NebbyHUD:add_damage_pop(self._unit, damage_info)
+    HopHUD:add_damage_pop(self._unit, damage_info)
     if self._dead and alive(damage_info.attacker_unit) then
       local attacker = damage_info.attacker_unit
       local attacker = attacker:base()._thrower_unit or attacker
@@ -12,7 +12,7 @@ function CopDamage:_on_damage_received(damage_info, ...)
         panel_id = criminal_data and criminal_data.panel_id
       end
       if panel_id then
-        NebbyHUD:update_kill_counter(managers.hud._teammate_panels[panel_id])
+        HopHUD:update_kill_counter(managers.hud._teammate_panels[panel_id])
       end
     end
   end

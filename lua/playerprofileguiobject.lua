@@ -51,7 +51,7 @@ function PlayerProfileGuiObject:init(ws)
     text = "",
     color = tweak_data.screen_colors.text
   })
-  NebbyHUD:set_name_panel_text(player_text, managers.network.account:username() or managers.blackmarket:get_preferred_character_real_name(), managers.experience:current_level(), managers.experience:current_rank(), nil)
+  HopHUD:set_name_panel_text(player_text, managers.network.account:username() or managers.blackmarket:get_preferred_character_real_name(), managers.experience:current_level(), managers.experience:current_rank(), nil)
   self:_make_fine_text(player_text)
   panel_width = math.max(panel_width, player_text:right() + panel_padding * 2 + perk_icon_size)
 

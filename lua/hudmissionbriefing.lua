@@ -5,5 +5,5 @@ function HUDMissionBriefing:set_player_slot(nr, params)
   if not slot or not alive(slot) then
     return
   end
-  NebbyHUD:set_name_panel_text(slot:child("name"), params.name, params.level, params.rank)
+  HopHUD:set_name_panel_text(slot:child("name"), params.name, params.level, params.rank)
 end

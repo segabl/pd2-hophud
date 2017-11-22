@@ -1,10 +1,10 @@
-if not NebbyHUD then
+if not HopHUD then
 
   tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
 
-  _G.NebbyHUD = {}
-  NebbyHUD.mod_path = ModPath
-  NebbyHUD.hooks = {
+  _G.HopHUD = {}
+  HopHUD.mod_path = ModPath
+  HopHUD.hooks = {
     ["lib/managers/criminalsmanager"] = "criminalsmanager.lua",
     ["lib/managers/group_ai_states/groupaistatebase"] = "groupaistatebase.lua",
     ["lib/managers/hudmanager"] = "hudmanager.lua",
@@ -21,19 +21,19 @@ if not NebbyHUD then
     ["lib/units/equipment/sentry_gun/sentrygundamage"] = "sentrygundamage.lua"
   }
   
-  NebbyHUD.damage_pops = {}
-  NebbyHUD.damage_pop_key = 1
-  NebbyHUD.colors = {
+  HopHUD.damage_pops = {}
+  HopHUD.damage_pop_key = 1
+  HopHUD.colors = {
     rank = Color.white,
     level = Color.white:with_alpha(0.8),
     action = Color.white:with_alpha(0.8)
   }
   
   local DamagePop = class()
-  NebbyHUD.DamagePop = DamagePop
+  HopHUD.DamagePop = DamagePop
   
   function DamagePop:init(position, damage, is_head, is_kill, is_special, color)
-    self._panel = NebbyHUD._panel:panel({
+    self._panel = HopHUD._panel:panel({
       name = "panel",
       visible = false
     })
@@ -53,7 +53,7 @@ if not NebbyHUD then
     self._panel:set_size(w, h)
     
     self._position = position
-    self._created_t = NebbyHUD._t
+    self._created_t = HopHUD._t
     self._lifetime = 1
   end
   
@@ -68,7 +68,7 @@ if not NebbyHUD then
     local screen_pos = Vector3()
     local world_pos = Vector3()
     mvector3.set(world_pos, self._position)
-    mvector3.set(screen_pos, NebbyHUD._ws:world_to_screen(cam, world_pos))
+    mvector3.set(screen_pos, HopHUD._ws:world_to_screen(cam, world_pos))
     mvector3.subtract(world_pos, cam:position())
     mvector3.normalize(world_pos)
     local _f = math.min(f * 1.5, 1)
@@ -78,11 +78,11 @@ if not NebbyHUD then
   end
 
   function DamagePop:destroy()
-    NebbyHUD._panel:remove(self._panel)
+    HopHUD._panel:remove(self._panel)
     self.dead = true
   end
 
-  function NebbyHUD:add_damage_pop(unit, info)
+  function HopHUD:add_damage_pop(unit, info)
     local attacker = info.attacker_unit
     local attacker_base = alive(attacker) and attacker:base()
     if attacker_base then
@@ -112,13 +112,13 @@ if not NebbyHUD then
     self.damage_pop_key = (self.damage_pop_key < 100 and self.damage_pop_key or 0) + 1
   end
   
-  function NebbyHUD:init()
+  function HopHUD:init()
     local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
     self._ws = managers.hud._workspace
-    self._panel = self._panel or hud and hud.panel or self._ws:panel({ name = "NebbyHUD" })
+    self._panel = self._panel or hud and hud.panel or self._ws:panel({ name = "HopHUD" })
   end
 
-  function NebbyHUD:update(t, dt)
+  function HopHUD:update(t, dt)
     self._t = t
     if self._update_t and t < self._update_t + 0.03 then
       return
@@ -139,24 +139,24 @@ if not NebbyHUD then
     self._update_t = t
   end
 
-  function NebbyHUD:rank_and_level_string(rank, level)
+  function HopHUD:rank_and_level_string(rank, level)
     local rank_string = rank and rank > 0 and (managers.experience:rank_string(rank) .. "Ї") or ""
     local level_string = level ~= nil and tostring(level) or ""
     return rank_string, level_string
   end
 
-  function NebbyHUD:set_name_panel_text(text, name, level, rank, color_id)
+  function HopHUD:set_name_panel_text(text, name, level, rank, color_id)
     local rank_string, level_string = self:rank_and_level_string(rank, level)
     local name_string = rank_string .. level_string .. " " .. tostring(name)
     text:set_text(name_string)
     if color_id and tweak_data.chat_colors[color_id] then
       text:set_range_color(0 + utf8.len(rank_string .. level_string), 0 + utf8.len(name_string), tweak_data.chat_colors[color_id])
     end
-    text:set_range_color(0, 0 + utf8.len(rank_string), NebbyHUD.colors.rank)
-    text:set_range_color(0 + utf8.len(rank_string), 0 + utf8.len(rank_string .. level_string), NebbyHUD.colors.level)
+    text:set_range_color(0, 0 + utf8.len(rank_string), HopHUD.colors.rank)
+    text:set_range_color(0 + utf8.len(rank_string), 0 + utf8.len(rank_string .. level_string), HopHUD.colors.level)
   end
 
-  function NebbyHUD:set_teammate_name_panel(panel, name, level, rank, color_id)
+  function HopHUD:set_teammate_name_panel(panel, name, level, rank, color_id)
     name = utf8.len(name) > 16 and name:sub(1, 16) .. "..." or name
   
     local rank_string, level_string = self:rank_and_level_string(rank, level)
@@ -169,11 +169,11 @@ if not NebbyHUD then
       panel:set_callsign(color_id)
       name:set_color(tweak_data.chat_colors[color_id])
     end
-    name:set_range_color(1, utf8.len(rank_string) + 1, NebbyHUD.colors.rank)
-    name:set_range_color(utf8.len(rank_string) + 1, utf8.len(rank_string .. level_string) + 1, NebbyHUD.colors.level)
+    name:set_range_color(1, utf8.len(rank_string) + 1, HopHUD.colors.rank)
+    name:set_range_color(utf8.len(rank_string) + 1, utf8.len(rank_string .. level_string) + 1, HopHUD.colors.level)
   end
   
-  function NebbyHUD:create_kill_counter(panel)
+  function HopHUD:create_kill_counter(panel)
     local teammate_panel = panel._panel
     local name = teammate_panel:child("name")
     local _, _, name_w, _ = name:text_rect()
@@ -235,7 +235,7 @@ if not NebbyHUD then
     end
   end
   
-  function NebbyHUD:update_kill_counter(panel, number_kills)
+  function HopHUD:update_kill_counter(panel, number_kills)
     local teammate_panel = panel._panel
     local kills_bg = teammate_panel:child("kills_bg")
     local kills = teammate_panel:child("kills")
@@ -248,7 +248,7 @@ if not NebbyHUD then
     kills_bg:set_w(kills_bg:w() - old_kills_w + kills_w)
   end
 
-  function NebbyHUD:information_by_unit(unit)
+  function HopHUD:information_by_unit(unit)
     if not unit or not alive(unit) then
       return
     end
@@ -267,7 +267,7 @@ if not NebbyHUD then
     return name, level, rank, color_id
   end
 
-  function NebbyHUD:information_by_peer(peer)
+  function HopHUD:information_by_peer(peer)
     local name, level, rank, color_id
     if not managers.network:session() or managers.network:session():local_peer() == peer then
       name = managers.network.account:username() or ""
@@ -287,8 +287,8 @@ end
 if RequiredScript then
 
   local requiredscript = RequiredScript:lower()
-  if NebbyHUD.hooks[requiredscript] then
-    dofile(NebbyHUD.mod_path .. "lua/" .. NebbyHUD.hooks[requiredscript])
+  if HopHUD.hooks[requiredscript] then
+    dofile(HopHUD.mod_path .. "lua/" .. HopHUD.hooks[requiredscript])
   end
 
 end
