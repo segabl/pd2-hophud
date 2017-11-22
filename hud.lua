@@ -14,6 +14,7 @@ if not HopHUD then
     ["lib/managers/hud/hudmissionbriefing"] = "hudmissionbriefing.lua",
     ["lib/managers/menu/contractboxgui"] = "contractboxgui.lua",
     ["lib/managers/menu/lobbycharacterdata"] = "lobbycharacterdata.lua",
+    ["lib/managers/menu/menucomponentmanager"] = "menucomponentmanager.lua",
     ["lib/managers/menu/playerprofileguiobject"] = "playerprofileguiobject.lua",
     ["lib/network/handlers/unitnetworkhandler"] = "unitnetworkhandler.lua",
     ["lib/units/contourext"] = "contourext.lua",
