@@ -152,6 +152,8 @@ if not HopHUD then
     text:set_text(name_string)
     if color_id and tweak_data.chat_colors[color_id] then
       text:set_range_color(0 + utf8.len(rank_string .. level_string), 0 + utf8.len(name_string), tweak_data.chat_colors[color_id])
+    else
+      text:set_range_color(0 + utf8.len(rank_string .. level_string), 0 + utf8.len(name_string), Color.white)
     end
     text:set_range_color(0, 0 + utf8.len(rank_string), HopHUD.colors.rank)
     text:set_range_color(0 + utf8.len(rank_string), 0 + utf8.len(rank_string .. level_string), HopHUD.colors.level)
@@ -291,5 +293,20 @@ if RequiredScript then
   if HopHUD.hooks[requiredscript] then
     dofile(HopHUD.mod_path .. "lua/" .. HopHUD.hooks[requiredscript])
   end
+
+end
+
+if not HopHUD._modified_Keepers and Keepers then
+
+  local ResetLabel_original = Keepers.ResetLabel
+  function Keepers:ResetLabel(unit, ...)
+    ResetLabel_original(self, unit, ...)
+    local label = managers.hud:_get_name_label(unit:unit_data().name_label_id)
+    if label then
+      managers.hud:align_teammate_name_label(label.panel, label.interact)
+    end
+  end
+
+  HopHUD._modified_Keepers = true
 
 end

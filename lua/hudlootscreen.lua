@@ -11,8 +11,8 @@ function HUDLootScreen:init(hud, workspace, saved_lootdrop, saved_selected, save
     return
   end
   
-  local name, level, rank, _ = HopHUD:information_by_peer(managers.network:session():local_peer())
-  HopHUD:set_name_panel_text(peer_name, name, level, rank)
+  local name, level, rank, color_id = HopHUD:information_by_peer(managers.network:session():local_peer())
+  HopHUD:set_name_panel_text(peer_name, name, level, rank, color_id)
   
   self:make_fine_text(peer_name)
   peer_name:set_right(peer_info_panel:w())
@@ -32,8 +32,8 @@ function HUDLootScreen:make_cards(peer, max_pc, left_card, right_card)
   local peer_info_panel = panel:child("peer_info")
   local peer_name = peer_info_panel:child("peer_name")
   
-  local name, level, rank, _ = HopHUD:information_by_peer(peer)
-  HopHUD:set_name_panel_text(peer_name, name, level, rank)
+  local name, level, rank, color_id = HopHUD:information_by_peer(peer)
+  HopHUD:set_name_panel_text(peer_name, name, level, rank, color_id)
   
   self:make_fine_text(peer_name)
   peer_name:set_right(peer_info_panel:w())
