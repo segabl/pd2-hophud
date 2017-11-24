@@ -1,6 +1,5 @@
-local _on_damage_received_original = CopDamage._on_damage_received
-function CopDamage:_on_damage_received(damage_info, ...)
-  local result = _on_damage_received_original(self, damage_info, ...)
+local _call_listeners_original = CopDamage._call_listeners
+function CopDamage:_call_listeners(damage_info, ...)
   if type(damage_info.damage) == "number" and damage_info.damage > 0 then
     HopHUD:add_damage_pop(self._unit, damage_info)
     if self._dead and alive(damage_info.attacker_unit) then
@@ -16,5 +15,5 @@ function CopDamage:_on_damage_received(damage_info, ...)
       end
     end
   end
-  return result
+  return _call_listeners_original(self, damage_info, ...)
 end
