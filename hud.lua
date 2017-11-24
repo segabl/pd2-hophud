@@ -296,14 +296,27 @@ if RequiredScript then
 
 end
 
-if not HopHUD._modified_Keepers and Keepers then
+if Keepers and not HopHUD._modified_Keepers then
 
   local ResetLabel_original = Keepers.ResetLabel
-  function Keepers:ResetLabel(unit, ...)
-    ResetLabel_original(self, unit, ...)
+  function Keepers:ResetLabel(unit, is_converted, icon, ...)
+    ResetLabel_original(self, unit, is_converted, BotWeapons._data.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
     local label = managers.hud:_get_name_label(unit:unit_data().name_label_id)
     if label then
       managers.hud:align_teammate_name_label(label.panel, label.interact)
+    end
+  end
+  
+  local OnActionStartedSO_original = Keepers.OnActionStartedSO
+  function Keepers:OnActionStartedSO(data, ...)
+    OnActionStartedSO_original(self, data, ...)
+    if not alive(data.bot_unit) then
+      return
+    end
+    local label = managers.hud:_get_name_label(data.bot_unit:unit_data().name_label_id)
+    if label and label.panel:child("infamy") then
+      label.panel:child("infamy"):set_center_y(label.panel:child("text"):center_y())
+      label.panel:child("infamy"):set_right(label.panel:child("text"):left())
     end
   end
 

@@ -12,13 +12,10 @@ local function adjust_name_label(manager, label, name, level, rank, color_id)
     color = Color.white
   })
   label.interact:set_visible(false)
-  --label.interact:set_current(10)
   
   local action = label.panel:child("action")
   if action then
-    action:set_text("DEBUG ACTION")
     action:set_color(HopHUD.colors.action)
-    --action:set_visible(true)
   end
   
   local infamy = label.panel:child("infamy")
@@ -55,15 +52,7 @@ end
 local _add_name_label_original = HUDManager._add_name_label
 function HUDManager:_add_name_label(data)
 
-  local id
-  -- check for double labels
-  for _, v in ipairs(self._hud.name_labels) do
-    if v.movement == data.unit:movement() then
-      id = v.id
-      break
-    end
-  end
-  id = id or _add_name_label_original(self, data)
+  local id = _add_name_label_original(self, data)
   
   local label = self:_get_name_label(id)
   local name, level, rank, color_id = HopHUD:information_by_unit(data.unit)
@@ -106,7 +95,7 @@ function HUDManager:align_teammate_name_label(panel, interact)
 
   if infamy then
     infamy:set_x(double_radius + 4)
-    infamy:set_center_y(text:center_y())
+    infamy:set_center_y(text:center_y() + 2)
     text:move(infamy:w(), 0)
     panel_w = math.max(panel_w, bag:right() + infamy:w())
   end
