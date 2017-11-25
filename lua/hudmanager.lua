@@ -19,7 +19,7 @@ function HUDManager:reset_player_hpbar()
   reset_player_hpbar_original(self)
   local name, level, rank, color_id = HopHUD:information_by_peer(managers.network:session():local_peer())
   HopHUD:set_teammate_name_panel(self._teammate_panels[HUDManager.PLAYER_PANEL], name, level, rank, color_id)
-  HopHUD:create_kill_counter(self._teammate_panels[HUDManager.PLAYER_PANEL], managers.statistics:session_total_kills() - managers.statistics:session_total_civilian_kills())
+  HopHUD:create_kill_counter(self._teammate_panels[HUDManager.PLAYER_PANEL], managers.statistics:session_total_kills())
 end
 
 local update_original = HUDManager.update
@@ -30,35 +30,36 @@ end
 
 function HUDManager:update_vehicle_label_by_id(label_id)
   local label = self:_get_name_label(label_id)
-  if label then
-    local occupants_text = ""
-    local color_ranges = {
-      { 0, 7, HopHUD.colors.level }
-    }
-    local vehicle_ext = alive(label.vehicle) and label.vehicle:vehicle_driving()
-    if vehicle_ext then
-      for _, v in pairs(vehicle_ext._seats) do
-        local name, level, rank, color_id = HopHUD:information_by_unit(v.occupant)
-        if name then
-          local rank_string, level_string = HopHUD:rank_and_level_string(rank, level)
-          local name_string = rank_string .. level_string .. " " .. name
-          local prev_len = utf8.len(occupants_text)
-          occupants_text = occupants_text .. name_string .. "\n"
-          if color_id then
-            table.insert(color_ranges, { prev_len + utf8.len(rank_string .. level_string), prev_len + utf8.len(name_string), tweak_data.chat_colors[color_id] or Color.white })
-          end
-          table.insert(color_ranges, { prev_len, prev_len + utf8.len(rank_string), HopHUD.colors.rank })
-          table.insert(color_ranges, { prev_len + utf8.len(rank_string), prev_len + utf8.len(rank_string .. level_string), HopHUD.colors.level })
+  if not label then
+    return
+  end
+  
+  local occupants_text = ""
+  local color_ranges = {}
+  local vehicle_ext = alive(label.vehicle) and label.vehicle:vehicle_driving()
+  if vehicle_ext then
+    for _, v in pairs(vehicle_ext._seats) do
+      local name, level, rank, color_id = HopHUD:information_by_unit(v.occupant)
+      if name then
+        local rank_string, level_string = HopHUD:rank_and_level_string(rank, level)
+        local name_string = rank_string .. level_string .. " " .. name
+        local prev_len = utf8.len(occupants_text)
+        occupants_text = occupants_text .. name_string .. "\n"
+        if tweak_data.chat_colors[color_id] then
+          table.insert(color_ranges, { prev_len + utf8.len(rank_string .. level_string), prev_len + utf8.len(name_string), tweak_data.chat_colors[color_id] })
         end
+        table.insert(color_ranges, { prev_len, prev_len + utf8.len(rank_string), HopHUD.colors.rank })
+        table.insert(color_ranges, { prev_len + utf8.len(rank_string), prev_len + utf8.len(rank_string .. level_string), HopHUD.colors.level })
       end
     end
-    local action = label.panel:child("action")
-    action:set_visible(occupants_text ~= "")
-    action:set_text(occupants_text)
-    action:set_color(Color.white)
-    for _, v in ipairs(color_ranges) do
-      action:set_range_color(unpack(v))
-    end
-    self:align_teammate_name_label(label.panel, label.interact)
   end
+  local action = label.panel:child("action")
+  action:set_visible(occupants_text ~= "")
+  action:set_text(occupants_text)
+  action:set_color(HopHUD.colors.default)
+  for _, v in ipairs(color_ranges) do
+    action:set_range_color(unpack(v))
+  end
+  self:align_teammate_name_label(label.panel, label.interact)
+
 end

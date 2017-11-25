@@ -25,6 +25,7 @@ if not HopHUD then
   HopHUD.damage_pops = {}
   HopHUD.damage_pop_key = 1
   HopHUD.colors = {
+    default = Color.white,
     rank = Color.white,
     level = Color.white:with_alpha(0.8),
     action = Color.white:with_alpha(0.8)
@@ -240,9 +241,12 @@ if not HopHUD then
   
   function HopHUD:update_kill_counter(panel, number_kills)
     local teammate_panel = panel._panel
-    local kills_bg = teammate_panel:child("kills_bg")
     local kills = teammate_panel:child("kills")
+    if not kills then
+      return
+    end
     local _, _, old_kills_w, _ = kills:text_rect()
+    local kills_bg = teammate_panel:child("kills_bg")
     
     kills:set_text("" .. (number_kills or kills:text() + 1))
     local _, _, kills_w, kills_h = kills:text_rect()
@@ -252,14 +256,14 @@ if not HopHUD then
   end
 
   function HopHUD:information_by_unit(unit)
-    if not unit or not alive(unit) then
+    if not alive(unit) then
       return
     end
     local gstate = managers.groupai:state()
     local unit_info = KillFeed and KillFeed:get_unit_information(unit)
     local unit_base = unit:base()
-    local name = unit_info and unit_info.name or unit_base.nick_name and unit_base:nick_name() or unit_base._tweak_table or ""
-    local level = gstate:is_unit_team_AI(unit) and "Bot" or unit_base.kpr_minion_owner_peer_id and "Joker"
+    local name = unit_info and unit_info.name or unit_base.nick_name and unit_base:nick_name() or unit_base._tweak_table:pretty(true)
+    local level = gstate:is_unit_team_AI(unit) and "Bot" or (unit_base.kpr_minion_owner_peer_id or gstate:is_enemy_converted_to_criminal(unit)) and "Joker"
     local rank
     local color_id = managers.criminals:character_color_id_by_unit(unit)
     if unit_base.is_husk_player or unit_base.is_local_player then
@@ -301,10 +305,13 @@ if Keepers and not HopHUD._modified_Keepers then
   local ResetLabel_original = Keepers.ResetLabel
   function Keepers:ResetLabel(unit, is_converted, icon, ...)
     ResetLabel_original(self, unit, is_converted, BotWeapons._data.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
+    --[[
     local label = managers.hud:_get_name_label(unit:unit_data().name_label_id)
-    if label then
+    if label and label.panel:child("infamy") then
       managers.hud:align_teammate_name_label(label.panel, label.interact)
+      label.panel:child("infamy"):set_center_y(label.panel:child("text"):center_y())
     end
+    ]]
   end
   
   local OnActionStartedSO_original = Keepers.OnActionStartedSO
@@ -315,8 +322,11 @@ if Keepers and not HopHUD._modified_Keepers then
     end
     local label = managers.hud:_get_name_label(data.bot_unit:unit_data().name_label_id)
     if label and label.panel:child("infamy") then
+      label.panel:remove(label.panel:child("infamy"))
+      --[[
       label.panel:child("infamy"):set_center_y(label.panel:child("text"):center_y())
       label.panel:child("infamy"):set_right(label.panel:child("text"):left())
+      ]]
     end
   end
 

@@ -10,7 +10,7 @@ function CopDamage:_call_listeners(damage_info, ...)
         local criminal_data = managers.criminals:character_data_by_unit(attacker)
         panel_id = criminal_data and criminal_data.panel_id
       end
-      if panel_id then
+      if managers.hud._teammate_panels[panel_id] then
         HopHUD:update_kill_counter(managers.hud._teammate_panels[panel_id])
       end
     end
