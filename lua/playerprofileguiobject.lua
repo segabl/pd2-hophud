@@ -1,7 +1,7 @@
 function PlayerProfileGuiObject:init(ws)
   local panel = ws:panel():panel()
   local next_level_data = managers.experience:next_level_data() or {}
-  local panel_width = 336
+  local panel_width = 342
   local font = tweak_data.menu.pd2_medium_font
   local font_size = tweak_data.menu.pd2_small_font_size
   local panel_padding = 12
@@ -83,7 +83,7 @@ function PlayerProfileGuiObject:init(ws)
 
   local money_text = panel:text({
     x = panel_padding,
-    y = math.round(exp_text:bottom() + font_size * 0.5),
+    y = math.round(avatar_panel:bottom() + panel_padding),
     text = "SPENDING CASH",
     font_size = font_size,
     font = font,
