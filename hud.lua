@@ -1,3 +1,7 @@
+if not HopLib then
+  return
+end
+
 if not HopHUD then
 
   tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
