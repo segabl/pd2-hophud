@@ -111,7 +111,7 @@ if not HopHUD then
       self.damage_pops[self.damage_pop_key]:destroy()
     end
     self.damage_pops[self.damage_pop_key] = pop
-    self.damage_pop_key = (self.damage_pop_key < 100 and self.damage_pop_key or 0) + 1
+    self.damage_pop_key = (self.damage_pop_key < 1000 and self.damage_pop_key or 0) + 1
   end
   
   function HopHUD:init()
@@ -320,14 +320,12 @@ if Keepers and not HopHUD._modified_Keepers then
     if not alive(data.bot_unit) then
       return
     end
+    --[[
     local label = managers.hud:_get_name_label(data.bot_unit:unit_data().name_label_id)
     if label and label.panel:child("infamy") then
       label.panel:remove(label.panel:child("infamy"))
-      --[[
-      label.panel:child("infamy"):set_center_y(label.panel:child("text"):center_y())
-      label.panel:child("infamy"):set_right(label.panel:child("text"):left())
-      ]]
     end
+    ]]
   end
 
   HopHUD._modified_Keepers = true

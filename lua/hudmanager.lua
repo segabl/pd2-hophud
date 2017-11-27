@@ -63,3 +63,17 @@ function HUDManager:update_vehicle_label_by_id(label_id)
   self:align_teammate_name_label(label.panel, label.interact)
 
 end
+
+local _update_name_labels_original = HUDManager._update_name_labels
+function HUDManager:_update_name_labels(...)
+  _update_name_labels_original(self, ...)
+
+  local half_w, half_h
+  for _, data in ipairs(self._hud.name_labels) do
+    local label_panel = data.panel
+    if label_panel:visible() then
+      label_panel:set_x(label_panel:x() + label_panel:w() / 2 - label_panel:child("text"):center_x())
+    end
+  end
+  
+end
