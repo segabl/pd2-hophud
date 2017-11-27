@@ -46,4 +46,3 @@ function GroupAIStateBase:convert_hostage_to_criminal(unit, peer_unit, ...)
     unit:contour():change_color("friendly", color)
   end
 end
-   

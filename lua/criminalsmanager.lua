@@ -32,13 +32,3 @@ function CriminalsManager:character_color_id_by_unit(unit)
   end
   return character_color_id_by_unit_original(self, unit)
 end
-
-local _remove_original = CriminalsManager._remove
-function CriminalsManager:_remove(id, ...)
-  local data = self._characters[id]
-  local panel_id = data.name == self._local_character and HUDManager.PLAYER_PANEL or data.data.panel_id
-  if panel_id then
-    HopHUD:update_kill_counter(managers.hud._teammate_panels[panel_id], 0)
-  end
-  return _remove_original(self, id, ...)
-end

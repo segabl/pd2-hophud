@@ -84,29 +84,27 @@ if not HopHUD then
     self.dead = true
   end
 
-  function HopHUD:add_damage_pop(unit, info)
-    local attacker = info.attacker_unit
-    local attacker_base = alive(attacker) and attacker:base()
-    if attacker_base then
-      local thrower = attacker_base._thrower_unit
-      local owner = attacker_base._owner or attacker_base.get_owner and attacker_base:get_owner()
-      attacker = thrower or owner or attacker
-    end
+  function HopHUD:add_damage_pop(unit, damage_info)
+    local attacker_info = HopLib.unit_info_manager:get_user_info(damage_info.attacker_unit)
     -- only show dmg pop if the attacker is on criminal team
-    local attacker_team = alive(attacker) and attacker:movement() and attacker:movement():team()
+    if not attacker_info then
+      return
+    end
+    local attacker_team = alive(attacker_info._unit) and attacker_info._unit:movement() and attacker_info._unit:movement():team()
     if not attacker_team or (attacker_team.id ~= "criminal1" and not attacker_team.friends.criminal1) then
       return
     end
-    local col_ray = info.col_ray or {}
-    local pos = col_ray.position or info.pos or col_ray.hit_position or unit:position()
+    local info = HopLib.unit_info_manager:get_info(unit)
+    local col_ray = damage_info.col_ray or {}
+    local pos = col_ray.position or damage_info.pos or col_ray.hit_position or unit:position()
     local unit_damage = unit:character_damage()
     local unit_base = unit:base()
     local is_head = unit_damage.is_head and unit_damage:is_head(col_ray.body)
     local is_kill = unit_damage._dead
-    local is_special = unit_base._tweak_table and tweak_data.character[unit_base._tweak_table] and tweak_data.character[unit_base._tweak_table].priority_shout
-    local color_id = alive(attacker) and managers.criminals:character_color_id_by_unit(attacker)
+    local is_special = info._is_special or info._is_boss
+    local color_id = attacker_info._color_id
 
-    local pop = DamagePop:new(pos, info.damage * 10, is_head, is_kill, is_special, color_id and color_id < #tweak_data.chat_colors and tweak_data.chat_colors[color_id])
+    local pop = DamagePop:new(pos, damage_info.damage * 10, is_head, is_kill, is_special, color_id and color_id < #tweak_data.chat_colors and tweak_data.chat_colors[color_id])
     if self.damage_pops[self.damage_pop_key] then
       self.damage_pops[self.damage_pop_key]:destroy()
     end
@@ -239,7 +237,27 @@ if not HopHUD then
     end
   end
   
-  function HopHUD:update_kill_counter(panel, number_kills)
+  function HopHUD:update_kill_counter(unit)
+    local info = HopLib.unit_info_manager:get_user_info(unit)
+    if not info then
+      return
+    end
+    
+    if info._type ~= "player" and info._sub_type ~= "team_ai" then
+      return
+    end
+    
+    local panel = info._sub_type == "local_player" and managers.hud:get_teammate_panel_by_peer()
+    if not panel then
+      local criminal_data = managers.criminals:character_data_by_unit(info._unit)
+      local panel_id = criminal_data and criminal_data.panel_id
+      panel = managers.hud._teammate_panels[panel_id]
+    end
+
+    if not panel then
+      return
+    end
+    
     local teammate_panel = panel._panel
     local kills = teammate_panel:child("kills")
     if not kills then
@@ -248,7 +266,7 @@ if not HopHUD then
     local _, _, old_kills_w, _ = kills:text_rect()
     local kills_bg = teammate_panel:child("kills_bg")
     
-    kills:set_text("" .. (number_kills or kills:text() + 1))
+    kills:set_text("" .. info._kills)
     local _, _, kills_w, kills_h = kills:text_rect()
     kills:set_size(kills_w, kills_h)
     
@@ -256,22 +274,12 @@ if not HopHUD then
   end
 
   function HopHUD:information_by_unit(unit)
-    if not alive(unit) then
+    local info = HopLib.unit_info_manager:get_info(unit)
+    if not info then
       return
     end
-    local gstate = managers.groupai:state()
-    local unit_info = KillFeed and KillFeed:get_unit_information(unit)
-    local unit_base = unit:base()
-    local name = unit_info and unit_info.name or unit_base.nick_name and unit_base:nick_name() or unit_base._tweak_table:pretty(true)
-    local level = gstate:is_unit_team_AI(unit) and "Bot" or (unit_base.kpr_minion_owner_peer_id or gstate:is_enemy_converted_to_criminal(unit)) and "Joker"
-    local rank
-    local color_id = managers.criminals:character_color_id_by_unit(unit)
-    if unit_base.is_husk_player or unit_base.is_local_player then
-      name = unit_base.is_local_player and managers.network.account:username() or unit:network():peer():name()
-      level = unit_base.is_local_player and managers.experience:current_level() or unit:network():peer():level()
-      rank = unit_base.is_local_player and managers.experience:current_rank() or unit:network():peer():rank()
-    end
-    return name, level, rank, color_id
+    local level = info._level or info._sub_type == "team_ai" and "Bot" or info._sub_type == "joker" and "Joker"
+    return info:nickname(), level, info._rank, info._color_id
   end
 
   function HopHUD:information_by_peer(peer)

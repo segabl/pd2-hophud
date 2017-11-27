@@ -68,8 +68,8 @@ function HUDManager:add_teammate_panel(character_name, player_name, ai, peer_id)
   
   local unit = managers.criminals:character_unit_by_name(character_name)
   if unit then
-    local _, level, rank, color_id = HopHUD:information_by_unit(unit)
-    HopHUD:set_teammate_name_panel(self._teammate_panels[id], player_name, level, rank, color_id)
+    local name, level, rank, color_id = HopHUD:information_by_unit(unit)
+    HopHUD:set_teammate_name_panel(self._teammate_panels[id], name, level, rank, color_id)
     HopHUD:create_kill_counter(self._teammate_panels[id], id == HUDManager.PLAYER_PANEL and managers.statistics:session_total_kills())
   end
   
