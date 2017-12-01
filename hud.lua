@@ -282,7 +282,7 @@ if not HopHUD then
     if not info then
       return
     end
-    local level = info._level or info._sub_type == "team_ai" and "Bot" or info._sub_type == "joker" and "Joker"
+    local level = info._level or info._sub_type == "team_ai" and "Bot" or (info._sub_type or info._type):pretty(true)
     return info:nickname(), level, info._rank, info._color_id
   end
 
