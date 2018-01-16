@@ -9,21 +9,19 @@ if not HopHUD then
   _G.HopHUD = {}
   HopHUD.mod_path = ModPath
   HopHUD.hooks = {
-    ["lib/managers/criminalsmanager"] = "criminalsmanager.lua",
-    ["lib/managers/group_ai_states/groupaistatebase"] = "groupaistatebase.lua",
-    ["lib/managers/hudmanager"] = "hudmanager.lua",
-    ["lib/managers/hudmanagerpd2"] = "hudmanagerpd2.lua",
-    ["lib/managers/hud/hudheisttimer"] = "hudheisttimer.lua",
-    ["lib/managers/hud/hudlootscreen"] = "hudlootscreen.lua",
-    ["lib/managers/hud/hudmissionbriefing"] = "hudmissionbriefing.lua",
-    ["lib/managers/menu/contractboxgui"] = "contractboxgui.lua",
-    ["lib/managers/menu/lobbycharacterdata"] = "lobbycharacterdata.lua",
-    ["lib/managers/menu/menucomponentmanager"] = "menucomponentmanager.lua",
-    ["lib/managers/menu/playerprofileguiobject"] = "playerprofileguiobject.lua",
-    ["lib/network/handlers/unitnetworkhandler"] = "unitnetworkhandler.lua",
-    ["lib/units/contourext"] = "contourext.lua",
-    ["lib/units/enemies/cop/copdamage"] = "copdamage.lua",
-    ["lib/units/equipment/sentry_gun/sentrygundamage"] = "sentrygundamage.lua"
+    ["lib/managers/criminalsmanager"] = "lua/criminalsmanager.lua",
+    ["lib/managers/group_ai_states/groupaistatebase"] = "lua/groupaistatebase.lua",
+    ["lib/managers/hudmanager"] = "lua/hudmanager.lua",
+    ["lib/managers/hudmanagerpd2"] = "lua/hudmanagerpd2.lua",
+    ["lib/managers/hud/hudheisttimer"] = "lua/hudheisttimer.lua",
+    ["lib/managers/hud/hudlootscreen"] = "lua/hudlootscreen.lua",
+    ["lib/managers/hud/hudmissionbriefing"] = "lua/hudmissionbriefing.lua",
+    ["lib/managers/menu/contractboxgui"] = "lua/contractboxgui.lua",
+    ["lib/managers/menu/lobbycharacterdata"] = "lua/lobbycharacterdata.lua",
+    ["lib/managers/menu/menucomponentmanager"] = "lua/menucomponentmanager.lua",
+    ["lib/managers/menu/playerprofileguiobject"] = "lua/playerprofileguiobject.lua",
+    ["lib/network/handlers/unitnetworkhandler"] = "lua/unitnetworkhandler.lua",
+    ["lib/units/contourext"] = "lua/contourext.lua"
   }
   
   HopHUD.damage_pops = {}
@@ -63,6 +61,8 @@ if not HopHUD then
     self._lifetime = 1
   end
   
+  local screen_pos = Vector3()
+  local world_pos = Vector3()
   function DamagePop:update(t, cam, cam_forward)
     local f = (t - self._created_t) / self._lifetime
     if f > 1 then
@@ -71,8 +71,6 @@ if not HopHUD then
       end
       return
     end
-    local screen_pos = Vector3()
-    local world_pos = Vector3()
     mvector3.set(world_pos, self._position)
     mvector3.set(screen_pos, HopHUD._ws:world_to_screen(cam, world_pos))
     mvector3.subtract(world_pos, cam:position())
@@ -89,7 +87,7 @@ if not HopHUD then
   end
 
   function HopHUD:add_damage_pop(unit, damage_info)
-    local attacker_info = HopLib.unit_info_manager:get_user_info(damage_info.attacker_unit)
+    local attacker_info = HopLib:unit_info_manager():get_user_info(damage_info.attacker_unit)
     -- only show dmg pop if the attacker is on criminal team
     if not attacker_info then
       return
@@ -98,9 +96,9 @@ if not HopHUD then
     if not attacker_team or (attacker_team.id ~= "criminal1" and not attacker_team.friends.criminal1) then
       return
     end
-    local info = HopLib.unit_info_manager:get_info(unit)
+    local info = HopLib:unit_info_manager():get_info(unit)
     local col_ray = damage_info.col_ray or {}
-    local pos = col_ray.position or damage_info.pos or col_ray.hit_position or unit:position()
+    local pos = col_ray.position or damage_info.pos or col_ray.hit_position or unit:position() + Vector3(0, 0, 80)
     local unit_damage = unit:character_damage()
     local unit_base = unit:base()
     local is_head = unit_damage.is_head and unit_damage:is_head(col_ray.body)
@@ -242,7 +240,7 @@ if not HopHUD then
   end
   
   function HopHUD:update_kill_counter(unit)
-    local info = HopLib.unit_info_manager:get_user_info(unit)
+    local info = HopLib:unit_info_manager():get_user_info(unit)
     if not info then
       return
     end
@@ -278,7 +276,7 @@ if not HopHUD then
   end
 
   function HopHUD:information_by_unit(unit)
-    local info = HopLib.unit_info_manager:get_info(unit)
+    local info = HopLib:unit_info_manager():get_info(unit)
     if not info then
       return
     end
@@ -300,16 +298,20 @@ if not HopHUD then
     color_id = peer and peer:id() or 1
     return name, level, rank, color_id
   end
+  
+  Hooks:Add("HopLibOnUnitDamaged", "HopLibOnUnitDamagedHopHud", function (unit, damage_info)
+    if type(damage_info.damage) == "number" and damage_info.damage > 0 then
+      HopHUD:add_damage_pop(unit, damage_info)
+      if unit:character_damage():dead() then
+        HopHUD:update_kill_counter(damage_info.attacker_unit)
+      end
+    end
+  end)
 
 end
 
-if RequiredScript then
-
-  local requiredscript = RequiredScript:lower()
-  if HopHUD.hooks[requiredscript] then
-    dofile(HopHUD.mod_path .. "lua/" .. HopHUD.hooks[requiredscript])
-  end
-
+if HopHUD.hooks[RequiredScript] then
+  dofile(HopHUD.mod_path .. HopHUD.hooks[RequiredScript])
 end
 
 if Keepers and not HopHUD._modified_Keepers then
@@ -317,27 +319,6 @@ if Keepers and not HopHUD._modified_Keepers then
   local ResetLabel_original = Keepers.ResetLabel
   function Keepers:ResetLabel(unit, is_converted, icon, ...)
     ResetLabel_original(self, unit, is_converted, BotWeapons._data.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
-    --[[
-    local label = managers.hud:_get_name_label(unit:unit_data().name_label_id)
-    if label and label.panel:child("infamy") then
-      managers.hud:align_teammate_name_label(label.panel, label.interact)
-      label.panel:child("infamy"):set_center_y(label.panel:child("text"):center_y())
-    end
-    ]]
-  end
-  
-  local OnActionStartedSO_original = Keepers.OnActionStartedSO
-  function Keepers:OnActionStartedSO(data, ...)
-    OnActionStartedSO_original(self, data, ...)
-    if not alive(data.bot_unit) then
-      return
-    end
-    --[[
-    local label = managers.hud:_get_name_label(data.bot_unit:unit_data().name_label_id)
-    if label and label.panel:child("infamy") then
-      label.panel:remove(label.panel:child("infamy"))
-    end
-    ]]
   end
 
   HopHUD._modified_Keepers = true
