@@ -88,12 +88,12 @@ if not HopHUD then
 
   function HopHUD:add_damage_pop(unit, damage_info)
     local attacker_info = HopLib:unit_info_manager():get_user_info(damage_info.attacker_unit)
-    -- only show dmg pop if the attacker is on criminal team
     if not attacker_info then
       return
     end
+    -- only show dmg pop if the attacker is on criminal team
     local attacker_team = alive(attacker_info._unit) and attacker_info._unit:movement() and attacker_info._unit:movement():team()
-    if not attacker_team or (attacker_team.id ~= "criminal1" and not attacker_team.friends.criminal1) then
+    if not attacker_team or (attacker_team.id ~= "criminal1" and not attacker_team.friends.criminal1 and attacker_team.id ~= "hacked_turret") then
       return
     end
     local info = HopLib:unit_info_manager():get_info(unit)
