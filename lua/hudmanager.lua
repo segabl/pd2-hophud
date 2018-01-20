@@ -4,6 +4,17 @@ function HUDManager:init_finalize(...)
   HopHUD:init()
 end
 
+local mask_off_hud = Idstring("guis/mask_off_hud")
+local show_original = HUDManager.show
+function HUDManager:show(name, ...)
+  show_original(self, name, ...)
+  if name == mask_off_hud and self:alive("guis/mask_off_hud") then
+    local mask_on_text = self:script("guis/mask_off_hud").mask_on_text
+    mask_on_text:set_top(56)
+    mask_on_text:set_font_size(tweak_data.hud.name_label_font_size)
+  end
+end
+
 function HUDManager:update_name_label_by_peer(peer)
   for _, data in pairs(self._hud.name_labels) do
     if data.peer_id == peer:id() then
