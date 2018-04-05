@@ -118,8 +118,18 @@ if not HopHUD then
     local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
     self._ws = managers.hud._workspace
     self._panel = self._panel or hud and hud.panel or self._ws:panel({ name = "HopHUD" })
+    self._unit_info_text = self._panel:text({
+      text = "Nobody",
+      font = tweak_data.menu.pd2_medium_font,
+      font_size = tweak_data.hud.name_label_font_size,
+      color = Color.white,
+      align = "center",
+      y = 100,
+      visible = false
+    })
   end
 
+  local cam_forward = Vector3()
   function HopHUD:update(t, dt)
     self._t = t
     if self._update_t and t < self._update_t + 0.03 then
@@ -129,7 +139,6 @@ if not HopHUD then
     if not cam then
       return
     end
-    local cam_forward = Vector3()
     mrotation.y(cam:rotation(), cam_forward)
     for _, pop in pairs(self.damage_pops) do
       if pop.dead then
@@ -138,6 +147,19 @@ if not HopHUD then
         pop:update(t, cam, cam_forward)
       end
     end
+    --[[
+    local from = cam:position()
+    mvector3.multiply(cam_forward, 10000)
+    mvector3.add(cam_forward, from)
+    local col = World:raycast("ray", from, cam_forward, "slot_mask", managers.slot:get_mask("raycastable_characters"))
+    local info = col and HopLib:unit_info_manager():get_info(col.unit)
+    if info then
+      self._unit_info_text:set_visible(true)
+      self._unit_info_text:set_text(info:nickname())
+    else
+      self._unit_info_text:set_visible(false)
+    end
+    ]]
     self._update_t = t
   end
 
@@ -318,7 +340,7 @@ if Keepers and not HopHUD._modified_Keepers then
 
   local ResetLabel_original = Keepers.ResetLabel
   function Keepers:ResetLabel(unit, is_converted, icon, ...)
-    ResetLabel_original(self, unit, is_converted, BotWeapons._data.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
+    ResetLabel_original(self, unit, is_converted, BotWeapons and BotWeapons._data.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
   end
 
   HopHUD._modified_Keepers = true
