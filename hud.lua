@@ -118,15 +118,6 @@ if not HopHUD then
     local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
     self._ws = managers.hud._workspace
     self._panel = self._panel or hud and hud.panel or self._ws:panel({ name = "HopHUD" })
-    self._unit_info_text = self._panel:text({
-      text = "Nobody",
-      font = tweak_data.menu.pd2_medium_font,
-      font_size = tweak_data.hud.name_label_font_size,
-      color = Color.white,
-      align = "center",
-      y = 100,
-      visible = false
-    })
   end
 
   local cam_forward = Vector3()
@@ -147,19 +138,6 @@ if not HopHUD then
         pop:update(t, cam, cam_forward)
       end
     end
-    --[[
-    local from = cam:position()
-    mvector3.multiply(cam_forward, 10000)
-    mvector3.add(cam_forward, from)
-    local col = World:raycast("ray", from, cam_forward, "slot_mask", managers.slot:get_mask("raycastable_characters"))
-    local info = col and HopLib:unit_info_manager():get_info(col.unit)
-    if info then
-      self._unit_info_text:set_visible(true)
-      self._unit_info_text:set_text(info:nickname())
-    else
-      self._unit_info_text:set_visible(false)
-    end
-    ]]
     self._update_t = t
   end
 
@@ -183,20 +161,27 @@ if not HopHUD then
   end
 
   function HopHUD:set_teammate_name_panel(panel, name, level, rank, color_id)
-    name = utf8.len(name) > 16 and name:sub(1, 16) .. "..." or name
-  
+    local name_panel = panel._panel:child("name")
+    local o_name = name
     local rank_string, level_string = self:rank_and_level_string(rank, level)
-    local name_string = rank_string .. level_string .. " " .. name
+    while true do
+      local name_string = rank_string .. level_string .. " " .. name
+      panel:set_name(name_string)
+      local _, _, name_w, _ = name_panel:text_rect()
+      if name_w > panel._panel:w() - name_panel:left() - 32 and utf8.len(o_name) > 0 then
+        o_name = o_name:sub(1, utf8.len(o_name) - 1)
+        name = o_name .. "..."
+      else
+        break
+      end
+    end
     
-    local name = panel._panel:child("name")
-    
-    panel:set_name(name_string)
     if color_id and tweak_data.chat_colors[color_id] then
       panel:set_callsign(color_id)
-      name:set_color(tweak_data.chat_colors[color_id])
+      name_panel:set_color(tweak_data.chat_colors[color_id])
     end
-    name:set_range_color(1, utf8.len(rank_string) + 1, HopHUD.colors.rank)
-    name:set_range_color(utf8.len(rank_string) + 1, utf8.len(rank_string .. level_string) + 1, HopHUD.colors.level)
+    name_panel:set_range_color(1, utf8.len(rank_string) + 1, HopHUD.colors.rank)
+    name_panel:set_range_color(utf8.len(rank_string) + 1, utf8.len(rank_string .. level_string) + 1, HopHUD.colors.level)
   end
   
   function HopHUD:create_kill_counter(panel)
