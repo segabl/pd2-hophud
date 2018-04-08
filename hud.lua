@@ -8,22 +8,6 @@ if not HopHUD then
 
   _G.HopHUD = {}
   HopHUD.mod_path = ModPath
-  HopHUD.hooks = {
-    ["lib/managers/criminalsmanager"] = "lua/criminalsmanager.lua",
-    ["lib/managers/group_ai_states/groupaistatebase"] = "lua/groupaistatebase.lua",
-    ["lib/managers/hudmanager"] = "lua/hudmanager.lua",
-    ["lib/managers/hudmanagerpd2"] = "lua/hudmanagerpd2.lua",
-    ["lib/managers/hud/hudheisttimer"] = "lua/hudheisttimer.lua",
-    ["lib/managers/hud/hudlootscreen"] = "lua/hudlootscreen.lua",
-    ["lib/managers/hud/hudmissionbriefing"] = "lua/hudmissionbriefing.lua",
-    ["lib/managers/menu/contractboxgui"] = "lua/contractboxgui.lua",
-    ["lib/managers/menu/lobbycharacterdata"] = "lua/lobbycharacterdata.lua",
-    ["lib/managers/menu/menucomponentmanager"] = "lua/menucomponentmanager.lua",
-    ["lib/managers/menu/playerprofileguiobject"] = "lua/playerprofileguiobject.lua",
-    ["lib/network/handlers/unitnetworkhandler"] = "lua/unitnetworkhandler.lua",
-    ["lib/units/contourext"] = "lua/contourext.lua"
-  }
-  
   HopHUD.damage_pops = {}
   HopHUD.damage_pop_key = 1
   HopHUD.colors = {
@@ -182,68 +166,8 @@ if not HopHUD then
     end
     name_panel:set_range_color(1, utf8.len(rank_string) + 1, HopHUD.colors.rank)
     name_panel:set_range_color(utf8.len(rank_string) + 1, utf8.len(rank_string .. level_string) + 1, HopHUD.colors.level)
-  end
-  
-  function HopHUD:create_kill_counter(panel)
-    local teammate_panel = panel._panel
-    local name = teammate_panel:child("name")
-    local _, _, name_w, _ = name:text_rect()
 
-    if not teammate_panel:child("skull") then
-      local skull = teammate_panel:text({
-        name = "skull",
-        layer = 1,
-        text = "",
-        color = Color.yellow,
-        font_size = tweak_data.hud_players.name_size,
-        font = tweak_data.menu.pd2_medium_font
-      })
-      managers.hud:make_fine_text(skull)
-      local _, _, skull_w, skull_h = skull:text_rect()
-      skull:set_size(skull_w, skull_h)
-      skull:set_x(name:left() + name_w + 10)
-      skull:set_center_y(name:center_y())
-      
-      local kills = teammate_panel:text({
-        name = "kills",
-        vertical = "bottom",
-        y = 0,
-        layer = 1,
-        text = "0",
-        color = Color.white,
-        font_size = tweak_data.hud_players.name_size,
-        font = tweak_data.hud_players.name_font
-      })
-      local _, _, kills_w, kills_h = kills:text_rect()
-      kills:set_size(kills_w, kills_h)
-      kills:set_x(skull:left() + skull_w)
-      kills:set_bottom(name:bottom())
-      
-      teammate_panel:bitmap({
-        name = "kills_bg",
-        visible = true,
-        layer = 0,
-        texture = "guis/textures/pd2/hud_tabs",
-        texture_rect = { 84, 0, 44, 32 },
-        color = Color.white / 3,
-        x = skull:x() - 2,
-        y = name:y() - 1,
-        w = skull_w + kills_w + 6,
-        h = name:h()
-      })
-    else
-      local skull = teammate_panel:child("skull")
-      local _, _, skull_w, _ = skull:text_rect()
-      skull:set_x(name:left() + name_w + 10)
-      skull:set_center_y(name:center_y())
-      local kills = teammate_panel:child("kills")
-      local _, _, kills_w, kills_h = kills:text_rect()
-      kills:set_size(kills_w, kills_h)
-      kills:set_x(skull:left() + skull_w)
-      kills:set_bottom(name:bottom())
-      local kills_bg = teammate_panel:child("kills_bg")
-      kills_bg:set_position(skull:x() - 2, name:y() - 1)
-    end
+    panel:_update_kill_panel()
   end
   
   function HopHUD:update_kill_counter(unit)
@@ -276,10 +200,8 @@ if not HopHUD then
     local kills_bg = teammate_panel:child("kills_bg")
     
     kills:set_text("" .. info._kills)
-    local _, _, kills_w, kills_h = kills:text_rect()
-    kills:set_size(kills_w, kills_h)
     
-    kills_bg:set_w(kills_bg:w() - old_kills_w + kills_w)
+    panel:_update_kill_panel()
   end
 
   function HopHUD:information_by_unit(unit)
@@ -317,8 +239,13 @@ if not HopHUD then
 
 end
 
-if HopHUD.hooks[RequiredScript] then
-  dofile(HopHUD.mod_path .. HopHUD.hooks[RequiredScript])
+if RequiredScript then
+
+  local fname = HopHUD.mod_path .. "lua/" .. RequiredScript:gsub(".+/(.+)", "%1.lua")
+  if io.file_is_readable(fname) then
+    dofile(fname)
+  end
+
 end
 
 if Keepers and not HopHUD._modified_Keepers then
