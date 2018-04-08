@@ -49,6 +49,14 @@ function HUDTeammate:init(...)
   })
 end
 
+local set_callsign_original = HUDTeammate.set_callsign
+function HUDTeammate:set_callsign(id, ...)
+  set_callsign_original(self, id, ...)
+
+  local radial_health = self._radial_health_panel:child("radial_health")
+  radial_health:set_image("guis/textures/pd2/hud_health_" .. id)
+end
+
 function HUDTeammate:_update_kill_panel()
   local teammate_panel = self._panel
   local name = teammate_panel:child("name")

@@ -1,8 +1,8 @@
-if not HopLib then
-  return
-end
-
 if not HopHUD then
+
+  if ModCore then
+    ModCore:init(ModPath .. "assets.xml", true, true)
+  end
 
   tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
 
@@ -209,7 +209,7 @@ if not HopHUD then
     if not info then
       return
     end
-    local level = info._level or info._sub_type == "team_ai" and "Bot" or (info._sub_type or info._type):pretty(true)
+    local level = info._level or info._sub_type == "team_ai" and "Bot" or (info._sub_type or info._type):pretty(true):gsub("Npc", "NPC")
     return info:nickname(), level, info._rank, info._color_id
   end
 
@@ -253,6 +253,20 @@ if Keepers and not HopHUD._modified_Keepers then
   local ResetLabel_original = Keepers.ResetLabel
   function Keepers:ResetLabel(unit, is_converted, icon, ...)
     ResetLabel_original(self, unit, is_converted, BotWeapons and BotWeapons._data.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
+  end
+  
+  local SetJokerLabel_original = Keepers.SetJokerLabel
+  function Keepers:SetJokerLabel(unit, ...)
+    SetJokerLabel_original(self, unit, ...)
+    
+    local name_label = managers.hud:_get_name_label(unit:unit_data().name_label_id)
+    if not name_label then
+      return
+    end
+    
+    local radial_health = name_label.panel:child("bag")
+    radial_health:set_image("guis/textures/pd2/hud_health_" .. unit:base().kpr_minion_owner_peer_id)
+    radial_health:set_blend_mode("normal")
   end
 
   HopHUD._modified_Keepers = true

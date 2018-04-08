@@ -1,0 +1,9 @@
+<mod name="HopHUD" global_key="hophud">
+  <AddFiles directory="assets">
+    <texture path="guis/textures/pd2/hud_health" force="true" />
+    <texture path="guis/textures/pd2/hud_health_1" />
+    <texture path="guis/textures/pd2/hud_health_2" />
+    <texture path="guis/textures/pd2/hud_health_3" />
+    <texture path="guis/textures/pd2/hud_health_4" />
+  </AddFiles>
+</mod>

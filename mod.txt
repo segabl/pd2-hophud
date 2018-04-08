@@ -4,7 +4,7 @@
   "author" : "Shiny Hoppip",
   "blt_version" : 2,
   "color" : "0.043 0.808 0.6",
-  "version" : "1.2",
+  "version" : "1.5",
   "dependencies" : [ "hoplib" ],
   "hooks" : [
     { "hook_id" : "lib/managers/criminalsmanager", "script_path" : "hud.lua" },
