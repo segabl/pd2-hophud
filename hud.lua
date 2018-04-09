@@ -1,7 +1,7 @@
 if not HopHUD then
 
   if ModCore then
-    ModCore:init(ModPath .. "assets.xml", true, true)
+    ModCore:new(ModPath .. "assets.xml", true, true)
   end
 
   tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
