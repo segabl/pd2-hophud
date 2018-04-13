@@ -49,6 +49,17 @@ function HUDTeammate:init(...)
   })
 end
 
+function HUDTeammate:animate_invulnerability(duration)
+  self._radial_health_panel:child("radial_custom"):animate(function (o)
+    o:set_color(Color(1, 1, 1, 1))
+    o:set_visible(true)
+    over(duration, function (p)
+      o:set_color(Color(1, 1 - p, 1, 1))
+    end)
+    o:set_visible(false)
+  end)
+end
+
 local set_callsign_original = HUDTeammate.set_callsign
 function HUDTeammate:set_callsign(id, ...)
   set_callsign_original(self, id, ...)
