@@ -47,33 +47,6 @@ function HUDTeammate:init(...)
     w = skull_w + kills_w + 6,
     h = name:h()
   })
-  
-  self._radial_health_panel:bitmap({
-    texture = "guis/textures/pd2/hud_stamina",
-    name = "stamina_radial",
-    alpha = 1,
-    layer = 1,
-    color = Color(1, 0, 0, 0),
-    blend_mode = "add",
-    render_template = "VertexColorTexturedRadial",
-    w = self._radial_health_panel:w(),
-    h = self._radial_health_panel:h(),
-  })
-
-  self._radial_health_panel:bitmap({
-    name = "stamina_radial_bg",
-    texture = "guis/textures/pd2/hud_stamina_black",
-    w = self._radial_health_panel:w(),
-    h = self._radial_health_panel:h(),
-    visible = self._id == HUDManager.PLAYER_PANEL
-  })
-end
-
-function HUDTeammate:set_stamina(data)
-  local stamina_radial = self._radial_health_panel:child("stamina_radial")
-  local red = data.current / data.total
-
-  stamina_radial:set_color(Color(1, red, 1, 1))
 end
 
 function HUDTeammate:animate_invulnerability(duration)
