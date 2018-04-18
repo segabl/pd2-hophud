@@ -115,9 +115,9 @@ if not HopHUD then
       return
     end
     mrotation.y(cam:rotation(), cam_forward)
-    for _, pop in pairs(self.damage_pops) do
+    for k, pop in pairs(self.damage_pops) do
       if pop.dead then
-        pop = nil
+        self.damage_pops[k] = nil
       else
         pop:update(t, cam, cam_forward)
       end
@@ -199,7 +199,7 @@ if not HopHUD then
     local _, _, old_kills_w, _ = kills:text_rect()
     local kills_bg = teammate_panel:child("kills_bg")
     
-    kills:set_text("" .. info._kills)
+    kills:set_text(tostring(info._kills))
     
     panel:_update_kill_panel()
   end
@@ -209,7 +209,7 @@ if not HopHUD then
     if not info then
       return
     end
-    local level = info._level or info._sub_type == "team_ai" and "Bot" or (info._sub_type or info._type):pretty(true):gsub("Npc", "NPC")
+    local level = info._level or info._sub_type == "team_ai" and "Bot" or (info._sub_type or info._type):pretty(true)
     return info:nickname(), level, info._rank, info._color_id
   end
 
@@ -236,12 +236,17 @@ if not HopHUD then
       end
     end
   end)
+  
+  Hooks:Add("HopLibOnEnemyConverted", "HopLibOnEnemyConvertedHopHud", function (unit, player_unit)
+    local color = tweak_data.peer_vector_colors[player_unit and player_unit:network():peer():id() or managers.network:session():local_peer():id()] or tweak_data.contour.character.friendly_color
+    unit:contour():change_color("friendly", color)
+  end)
 
 end
 
 if RequiredScript then
 
-  local fname = HopHUD.mod_path .. "lua/" .. RequiredScript:gsub(".+/(.+)", "%1.lua")
+  local fname = HopHUD.mod_path .. RequiredScript:gsub(".+/(.+)", "lua/%1.lua")
   if io.file_is_readable(fname) then
     dofile(fname)
   end

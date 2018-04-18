@@ -37,12 +37,3 @@ function GroupAIStateBase:_upd_criminal_suspicion_progress(...)
     end
   return _upd_criminal_suspicion_progress_original(self, ...)
 end
- 
-local convert_hostage_to_criminal_original = GroupAIStateBase.convert_hostage_to_criminal
-function GroupAIStateBase:convert_hostage_to_criminal(unit, peer_unit, ...)
-  convert_hostage_to_criminal_original(self, unit, peer_unit, ...)
-  if unit:brain()._logic_data.is_converted then
-    local color = tweak_data.peer_vector_colors[peer_unit and peer_unit:network():peer():id() or managers.network:session():local_peer():id()] or tweak_data.contour.character.friendly_color
-    unit:contour():change_color("friendly", color)
-  end
-end

@@ -20,7 +20,6 @@
     { "hook_id" : "lib/managers/menu/lobbycharacterdata", "script_path" : "hud.lua" },
     { "hook_id" : "lib/managers/menu/menucomponentmanager", "script_path" : "hud.lua" },
     { "hook_id" : "lib/managers/menu/playerprofileguiobject", "script_path" : "hud.lua" },
-    { "hook_id" : "lib/network/handlers/unitnetworkhandler", "script_path" : "hud.lua" },
     { "hook_id" : "lib/units/beings/player/playermovement", "script_path" : "hud.lua" },
     { "hook_id" : "lib/units/contourext", "script_path" : "hud.lua" }
   ]
