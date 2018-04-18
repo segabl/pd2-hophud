@@ -66,6 +66,7 @@ function HUDTeammate:set_callsign(id, ...)
 
   local radial_health = self._radial_health_panel:child("radial_health")
   radial_health:set_image("guis/textures/pd2/hud_health_" .. id)
+  radial_health:set_texture_rect(128, 0, -128, 128)
 end
 
 function HUDTeammate:_update_kill_panel()
