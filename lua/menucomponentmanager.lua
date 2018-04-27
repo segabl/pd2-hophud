@@ -109,37 +109,6 @@ function BLTNotificationsGui:_setup()
 
   self._downloads_panel:set_righttop(self._panel:w() - 10, 10)
 
-  if BeardLib then
-    self._beardlib_updates = self._panel:panel({
-      name = "BeardLibModsManagerPanel",
-      layer = 110, 
-      w = 28,
-      h = 28,
-      y = 8,
-    })
-    self._beardlib_updates:set_righttop(self._content_panel:right() - 2, self._content_panel:top() + 2)
-    local icon = self._beardlib_updates:bitmap({
-      name = "Icon",
-      texture = "guis/textures/menu_ui_icons",
-      texture_rect = {93, 2, 32, 32},
-      w = 28,
-      h = 28,
-      color = Color(0, 0.4, 1),
-      rotation = 360
-    })
-    self._beardlib_updates:text({
-      name = "UpdatesCount",
-      font_size = font_size,
-      rotation = 360,
-      font = font,
-      layer = 10,
-      color = tweak_data.screen_colors.title,
-      text = "0",
-      align = "center",
-      vertical = "center"
-    }):set_center(icon:center())
-  end
-
   -- Add notifications that have already been registered
   for _, notif in ipairs(BLT.Notifications:get_notifications()) do
     self:add_notification(notif)
