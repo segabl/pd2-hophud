@@ -1,4 +1,4 @@
-<mod name="HopHUD" global_key="hophud">
+<mod name="HopHUD" global_key="hophud" color="Color(0.043, 0.808, 0.6)">
   <AddFiles directory="assets">
     <texture path="guis/textures/pd2/hud_health" force="true" />
     <texture path="guis/textures/pd2/hud_health_1" />
