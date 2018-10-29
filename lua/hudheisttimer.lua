@@ -6,7 +6,7 @@ function HUDHeistTimer:init(...)
   self._realtime_text = self._heist_timer_panel:text({
     name = "realtime_text",
     text = "00:00",
-    font_size = 17,
+    font_size = 18,
     font = tweak_data.hud.medium_font_noshadow,
     color = Color.white:with_alpha(0.8),
     align = "center",
@@ -24,5 +24,5 @@ function HUDHeistTimer:set_time(time)
     return
   end
   set_time_original(self, time)
-  self._realtime_text:set_text(os.date("%H:%M:%S"))
+  self._realtime_text:set_text(os.date("%H:%M"))
 end
