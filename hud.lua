@@ -272,6 +272,8 @@ if Keepers and not HopHUD._modified_Keepers then
     local radial_health = name_label.panel:child("bag")
     radial_health:set_image("guis/textures/pd2/hud_health_" .. unit:base().kpr_minion_owner_peer_id)
     radial_health:set_blend_mode("normal")
+
+    unit:contour():change_color("friendly", tweak_data.peer_vector_colors[unit:base().kpr_minion_owner_peer_id] or tweak_data.contour.character.friendly_color)
   end
 
   HopHUD._modified_Keepers = true
