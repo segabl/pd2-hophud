@@ -237,7 +237,7 @@ if not HopHUD then
     end
   end)
   
-  Hooks:Add("HopLibOnEnemyConverted", "HopLibOnEnemyConvertedHopHud", function (unit, player_unit)
+  Hooks:Add("HopLibOnMinionAdded", "HopLibOnMinionAddedHopHud", function (unit, player_unit)
     local color = tweak_data.peer_vector_colors[player_unit and player_unit:network():peer():id() or managers.network:session():local_peer():id()] or tweak_data.contour.character.friendly_color
     unit:contour():change_color("friendly", color)
   end)
