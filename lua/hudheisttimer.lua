@@ -1,7 +1,10 @@
 local init_original = HUDHeistTimer.init
 function HUDHeistTimer:init(...)
   init_original(self, ...)
-  
+
+  self._timer_text:set_font(tweak_data.menu.pd2_large_font_id)
+  self._timer_text:set_font_size(28)
+
   local _, _, _, th = self._timer_text:text_rect()
   self._realtime_text = self._heist_timer_panel:text({
     name = "realtime_text",
