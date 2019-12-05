@@ -5,7 +5,12 @@
   "blt_version" : 2,
   "color" : "0.043 0.808 0.6",
   "version" : "1.5",
-  "dependencies" : [ "hoplib" ],
+  "updates" : [
+    {
+      "identifier" : "pd2-hophud",
+      "host": { "meta": "http://updates.hoppip.at/pd2-hophud" }
+    }
+  ],
   "hooks" : [
     { "hook_id" : "lib/managers/criminalsmanager", "script_path" : "hud.lua" },
     { "hook_id" : "lib/managers/group_ai_states/groupaistatebase", "script_path" : "hud.lua" },
