@@ -1,8 +1,12 @@
 if not HopHUD then
 
-  if ModCore then
-    ModCore:new(ModPath .. "assets.xml", true, true)
-  end
+  local tex_ids = Idstring("texture")
+  HopLib:load_assets({
+    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_1"), file = ModPath .. "assets/guis/textures/pd2/hud_health_1.texture" },
+    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_2"), file = ModPath .. "assets/guis/textures/pd2/hud_health_2.texture" },
+    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_3"), file = ModPath .. "assets/guis/textures/pd2/hud_health_3.texture" },
+    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_4"), file = ModPath .. "assets/guis/textures/pd2/hud_health_4.texture" }
+  })
 
   tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
 
