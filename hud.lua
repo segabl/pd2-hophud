@@ -261,7 +261,7 @@ if Keepers and not HopHUD._modified_Keepers then
 
   local ResetLabel_original = Keepers.ResetLabel
   function Keepers:ResetLabel(unit, is_converted, icon, ...)
-    ResetLabel_original(self, unit, is_converted, BotWeapons and BotWeapons._data.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
+    ResetLabel_original(self, unit, is_converted, BotWeapons and BotWeapons.settings.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
   end
   
   local SetJokerLabel_original = Keepers.SetJokerLabel
