@@ -34,8 +34,16 @@ function PlayerProfileGuiObject:init(ws)
     h = font_size * 3
   })
   
-  Steam:friend_avatar(2, Steam:userid(), function (texture)
-    if avatar_panel and texture then
+  local large_avatar
+  Steam:friend_avatar(Steam.MEDIUM_AVATAR, Steam:userid(), function (texture)
+    if not large_avatar and alive(avatar_panel) then
+      avatar_panel:set_image(texture)
+    end
+  end)
+  
+  Steam:friend_avatar(Steam.LARGE_AVATAR, Steam:userid(), function (texture)
+    if alive(avatar_panel) then
+      large_avatar = true
       avatar_panel:set_image(texture)
     end
   end)
