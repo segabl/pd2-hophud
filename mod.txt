@@ -1,7 +1,8 @@
 {
   "name" : "HopHUD",
-  "description" : "Shiny Hoppip's custom HUD",
-  "author" : "Shiny Hoppip",
+  "description" : "Hoppip's custom HUD",
+  "author" : "Hoppip",
+  "contact" : "Hoppip#1630",
   "blt_version" : 2,
   "color" : "0.043 0.808 0.6",
   "version" : "1.5",
