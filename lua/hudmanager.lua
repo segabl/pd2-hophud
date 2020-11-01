@@ -28,8 +28,8 @@ end
 local reset_player_hpbar_original = HUDManager.reset_player_hpbar
 function HUDManager:reset_player_hpbar()
   reset_player_hpbar_original(self)
-  local name, level, rank, color_id = HopHUD:information_by_peer(managers.network:session():local_peer())
-  HopHUD:set_teammate_name_panel(self._teammate_panels[HUDManager.PLAYER_PANEL], name, level, rank, color_id)
+  local name, _, _, color_id = HopHUD:information_by_peer(managers.network:session():local_peer())
+  HopHUD:set_teammate_name_panel(self._teammate_panels[HUDManager.PLAYER_PANEL], name, color_id)
 end
 
 local update_original = HUDManager.update

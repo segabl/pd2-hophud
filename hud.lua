@@ -20,10 +20,10 @@ if not HopHUD then
     level = Color.white:with_alpha(0.8),
     action = Color.white:with_alpha(0.8)
   }
-  
+
   local DamagePop = class()
   HopHUD.DamagePop = DamagePop
-  
+
   function DamagePop:init(position, damage, is_head, is_kill, is_special, color)
     self._panel = HopHUD._panel:panel({
       name = "panel",
@@ -43,12 +43,12 @@ if not HopHUD then
     end
     local _, _, w, h = text:text_rect()
     self._panel:set_size(w, h)
-    
+
     self._position = position
     self._created_t = HopHUD._t
     self._lifetime = 1
   end
-  
+
   local screen_pos = Vector3()
   local world_pos = Vector3()
   function DamagePop:update(t, cam, cam_forward)
@@ -101,7 +101,7 @@ if not HopHUD then
     self.damage_pops[self.damage_pop_key] = pop
     self.damage_pop_key = (self.damage_pop_key < 1000 and self.damage_pop_key or 0) + 1
   end
-  
+
   function HopHUD:init()
     local hud = managers.hud:script(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2)
     self._ws = managers.hud._workspace
@@ -148,42 +148,39 @@ if not HopHUD then
     text:set_range_color(0 + utf8.len(rank_string), 0 + utf8.len(rank_string .. level_string), HopHUD.colors.level)
   end
 
-  function HopHUD:set_teammate_name_panel(panel, name, level, rank, color_id)
+  function HopHUD:set_teammate_name_panel(panel, name, color_id)
     local name_panel = panel._panel:child("name")
     local o_name = name
-    local rank_string, level_string = self:rank_and_level_string(rank, level)
     while true do
-      local name_string = rank_string .. level_string .. " " .. name
+      local name_string = name
       panel:set_name(name_string)
       local _, _, name_w, _ = name_panel:text_rect()
-      if name_w > panel._panel:w() - name_panel:left() - 32 and utf8.len(o_name) > 0 then
+      if name_w > panel._panel:w() - name_panel:left() - 48 and utf8.len(o_name) > 0 then
         o_name = o_name:sub(1, utf8.len(o_name) - 1)
         name = o_name .. "..."
       else
         break
       end
     end
-    
+
     if color_id and tweak_data.chat_colors[color_id] then
       panel:set_callsign(color_id)
-      name_panel:set_color(tweak_data.chat_colors[color_id])
+      name_panel:set_color(HopHUD.colors.default)
     end
-    name_panel:set_range_color(1, utf8.len(rank_string) + 1, HopHUD.colors.rank)
-    name_panel:set_range_color(utf8.len(rank_string) + 1, utf8.len(rank_string .. level_string) + 1, HopHUD.colors.level)
 
     panel:_update_kill_panel()
   end
-  
+
   function HopHUD:update_kill_counter(unit)
     local info = HopLib:unit_info_manager():get_user_info(unit)
     if not info then
       return
     end
-    
+
     if info._type ~= "player" and info._sub_type ~= "team_ai" then
       return
     end
-    
+
     local panel = info._sub_type == "local_player" and managers.hud:get_teammate_panel_by_peer()
     if not panel then
       local criminal_data = managers.criminals:character_data_by_unit(info._unit)
@@ -194,17 +191,15 @@ if not HopHUD then
     if not panel then
       return
     end
-    
+
     local teammate_panel = panel._panel
     local kills = teammate_panel:child("kills")
     if not kills then
       return
     end
-    local _, _, old_kills_w, _ = kills:text_rect()
-    local kills_bg = teammate_panel:child("kills_bg")
-    
+
     kills:set_text(tostring(info._kills))
-    
+
     panel:_update_kill_panel()
   end
 
@@ -231,7 +226,7 @@ if not HopHUD then
     color_id = peer and peer:id() or 1
     return name, level, rank, color_id
   end
-  
+
   Hooks:Add("HopLibOnUnitDamaged", "HopLibOnUnitDamagedHopHud", function (unit, damage_info)
     if type(damage_info.damage) == "number" and damage_info.damage > 0 then
       HopHUD:add_damage_pop(unit, damage_info)
@@ -240,7 +235,7 @@ if not HopHUD then
       end
     end
   end)
-  
+
   Hooks:Add("HopLibOnMinionAdded", "HopLibOnMinionAddedHopHud", function (unit, player_unit)
     local color = tweak_data.peer_vector_colors[player_unit and player_unit:network():peer():id() or managers.network:session():local_peer():id()] or tweak_data.contour.character.friendly_color
     unit:contour():change_color("friendly", color)
@@ -263,16 +258,16 @@ if Keepers and not HopHUD._modified_Keepers then
   function Keepers:ResetLabel(unit, is_converted, icon, ...)
     ResetLabel_original(self, unit, is_converted, BotWeapons and BotWeapons.settings.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
   end
-  
+
   local SetJokerLabel_original = Keepers.SetJokerLabel
   function Keepers:SetJokerLabel(unit, ...)
     SetJokerLabel_original(self, unit, ...)
-    
+
     local name_label = managers.hud:_get_name_label(unit:unit_data().name_label_id)
     if not name_label then
       return
     end
-    
+
     local radial_health = name_label.panel:child("bag")
     radial_health:set_image("guis/textures/pd2/hud_health_" .. unit:base().kpr_minion_owner_peer_id)
     radial_health:set_blend_mode("normal")
