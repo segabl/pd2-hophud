@@ -254,14 +254,15 @@ end
 
 if Keepers and not HopHUD._modified_Keepers then
 
-  local ResetLabel_original = Keepers.ResetLabel
-  function Keepers:ResetLabel(unit, is_converted, icon, ...)
-    ResetLabel_original(self, unit, is_converted, BotWeapons and BotWeapons.settings.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
+  local reset_label_original = Keepers.ResetLabel or Keepers.reset_label
+  function Keepers:reset_label(unit, is_converted, icon, ...)
+    reset_label_original(self, unit, is_converted, BotWeapons and BotWeapons.settings.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
   end
+  Keepers.ResetLabel = Keepers.reset_label
 
-  local SetJokerLabel_original = Keepers.SetJokerLabel
-  function Keepers:SetJokerLabel(unit, ...)
-    SetJokerLabel_original(self, unit, ...)
+  local set_joker_label_original = Keepers.SetJokerLabel or Keepers.set_joker_label
+  function Keepers:set_joker_label(unit, ...)
+    set_joker_label_original(self, unit, ...)
 
     local name_label = managers.hud:_get_name_label(unit:unit_data().name_label_id)
     if not name_label then
@@ -274,6 +275,7 @@ if Keepers and not HopHUD._modified_Keepers then
 
     unit:contour():change_color("friendly", tweak_data.peer_vector_colors[unit:base().kpr_minion_owner_peer_id] or tweak_data.contour.character.friendly_color)
   end
+  Keepers.SetJokerLabel = Keepers.set_joker_label
 
   HopHUD._modified_Keepers = true
 
