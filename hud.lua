@@ -8,8 +8,6 @@ if not HopHUD then
     { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_4"), file = ModPath .. "assets/guis/textures/pd2/hud_health_4.texture" }
   })
 
-  tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
-
   _G.HopHUD = {}
   HopHUD.mod_path = ModPath
   HopHUD.damage_pops = {}
@@ -241,6 +239,14 @@ if not HopHUD then
     unit:contour():change_color("friendly", color)
   end)
 
+  Hooks:Add("LocalizationManagerPostInit", "LocalizationManagerPostInitStreamlinedHeisting", function (loc)
+    HopLib:load_localization(HopHUD.mod_path .. "loc/", loc)
+  end)
+
+end
+
+if tweak_data then
+  tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
 end
 
 if RequiredScript then
