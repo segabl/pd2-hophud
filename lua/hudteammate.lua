@@ -1,7 +1,4 @@
-local init_original = HUDTeammate.init
-function HUDTeammate:init(...)
-  init_original(self, ...)
-  
+Hooks:PostHook(HUDTeammate, "init", "init_hophud", function (self)
   local teammate_panel = self._panel
   local name = teammate_panel:child("name")
   local _, _, name_w, _ = name:text_rect()
@@ -19,7 +16,7 @@ function HUDTeammate:init(...)
   skull:set_size(skull_w, skull_h)
   skull:set_x(name:left() + name_w + 10)
   skull:set_center_y(name:center_y())
-  
+
   local kills = teammate_panel:text({
     name = "kills",
     vertical = "bottom",
@@ -34,7 +31,7 @@ function HUDTeammate:init(...)
   kills:set_h(kills_h)
   kills:set_x(skull:left() + skull_w)
   kills:set_bottom(name:bottom())
-  
+
   teammate_panel:bitmap({
     name = "kills_bg",
     visible = true,
@@ -47,7 +44,7 @@ function HUDTeammate:init(...)
     w = skull_w + kills_w + 6,
     h = name:h()
   })
-end
+end)
 
 function HUDTeammate:animate_invulnerability(duration)
   self._radial_health_panel:child("radial_custom"):animate(function (o)
@@ -60,14 +57,11 @@ function HUDTeammate:animate_invulnerability(duration)
   end)
 end
 
-local set_callsign_original = HUDTeammate.set_callsign
-function HUDTeammate:set_callsign(id, ...)
-  set_callsign_original(self, id, ...)
-
+Hooks:PostHook(HUDTeammate, "set_callsign", "set_callsign_hophud", function (self, id)
   local radial_health = self._radial_health_panel:child("radial_health")
   radial_health:set_image("guis/textures/pd2/hud_health_" .. id)
   radial_health:set_texture_rect(128, 0, -128, 128)
-end
+end)
 
 function HUDTeammate:_update_kill_panel()
   local teammate_panel = self._panel
