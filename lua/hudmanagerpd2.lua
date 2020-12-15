@@ -57,7 +57,7 @@ function HUDManager:add_vehicle_name_label(data, ...)
   local id = add_vehicle_name_label_original(self, data, ...)
   local label = self:_get_name_label(id)
 
-  adjust_name_label(self, data, label, data.name, "Vehicle", nil, nil)
+  adjust_name_label(self, data, label, data.name, managers.localization:text("hud_hophud_unit_type_vehicle"), nil, nil)
 
   return id
 end

@@ -216,7 +216,7 @@ if not HopHUD then
     if not info then
       return
     end
-    local level = info._level or info._sub_type == "team_ai" and "Bot" or (info._sub_type or info._type):pretty(true)
+    local level = info._level or info._sub_type and managers.localization:text("hud_hophud_unit_type_" .. info._sub_type) or info._type:pretty(true)
     return info:nickname(), level, info._rank, info._color_id
   end
 
