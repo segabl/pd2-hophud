@@ -1,3 +1,7 @@
+if not HopHUD.settings.custom_timer then
+  return
+end
+
 local init_original = HUDHeistTimer.init
 function HUDHeistTimer:init(...)
   init_original(self, ...)

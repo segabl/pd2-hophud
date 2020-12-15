@@ -20,7 +20,7 @@ local function adjust_name_label(manager, data, label, name, level, rank, color_
 
   local infamy = label.panel:child("infamy")
   if infamy then
-    infamy:set_size(tweak_data.hud.name_label_font_size * (infamy:w() / infamy:h()), tweak_data.hud.name_label_font_size)
+    infamy:set_size(tweak_data.hud.name_label_font_size * (infamy:w() / infamy:h()) * 0.75, tweak_data.hud.name_label_font_size * 0.75)
   end
 
   local bag = label.panel:child("bag")

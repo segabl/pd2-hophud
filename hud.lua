@@ -2,10 +2,11 @@ if not HopHUD then
 
   local tex_ids = Idstring("texture")
   HopLib:load_assets({
-    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_1"), file = ModPath .. "assets/guis/textures/pd2/hud_health_1.texture" },
-    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_2"), file = ModPath .. "assets/guis/textures/pd2/hud_health_2.texture" },
-    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_3"), file = ModPath .. "assets/guis/textures/pd2/hud_health_3.texture" },
-    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_4"), file = ModPath .. "assets/guis/textures/pd2/hud_health_4.texture" }
+    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_1"), file = ModPath .. "assets/guis/textures/pd2/hud_health_1.dds" },
+    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_2"), file = ModPath .. "assets/guis/textures/pd2/hud_health_2.dds" },
+    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_3"), file = ModPath .. "assets/guis/textures/pd2/hud_health_3.dds" },
+    { ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_4"), file = ModPath .. "assets/guis/textures/pd2/hud_health_4.dds" },
+    { ext = tex_ids, path = Idstring("guis/textures/pd2/wp_checkmark"), file = ModPath .. "assets/guis/textures/pd2/wp_checkmark.dds" }
   })
 
   _G.HopHUD = {}
@@ -18,6 +19,13 @@ if not HopHUD then
     level = Color.white:with_alpha(0.8),
     action = Color.white:with_alpha(0.8)
   }
+  HopHUD.settings = {
+    civilian_icons = true,
+    custom_timer = true,
+    damage_pops = true,
+    display_invulnerability = true
+  }
+  HopHUD.menu_builder = MenuBuilder:new("hophud", HopHUD.settings)
 
   local DamagePop = class()
   HopHUD.DamagePop = DamagePop
@@ -73,6 +81,9 @@ if not HopHUD then
   end
 
   function HopHUD:add_damage_pop(unit, damage_info)
+    if not self.settings.damage_pops then
+      return
+    end
     local attacker_info = HopLib:unit_info_manager():get_user_info(damage_info.attacker_unit)
     if not attacker_info then
       return
@@ -86,7 +97,6 @@ if not HopHUD then
     local col_ray = damage_info.col_ray or {}
     local pos = col_ray.position or damage_info.pos or col_ray.hit_position or unit:position() + Vector3(0, 0, 80)
     local unit_damage = unit:character_damage()
-    local unit_base = unit:base()
     local is_head = unit_damage.is_head and unit_damage:is_head(col_ray.body)
     local is_kill = unit_damage._dead
     local is_special = info._is_special or info._is_boss
@@ -239,8 +249,10 @@ if not HopHUD then
     unit:contour():change_color("friendly", color)
   end)
 
-  Hooks:Add("LocalizationManagerPostInit", "LocalizationManagerPostInitStreamlinedHeisting", function (loc)
+  Hooks:Add("MenuManagerBuildCustomMenus", "MenuManagerBuildCustomMenusHopHud", function(menu_manager, nodes)
+    local loc = managers.localization
     HopLib:load_localization(HopHUD.mod_path .. "loc/", loc)
+    HopHUD.menu_builder:create_menu(nodes)
   end)
 
 end
@@ -258,15 +270,14 @@ if RequiredScript then
 
 end
 
-if Keepers and not HopHUD._modified_Keepers then
+if Keepers and not Keepers._modified_by_hophud then
 
-  local reset_label_original = Keepers.ResetLabel or Keepers.reset_label
+  local reset_label_original = Keepers.reset_label
   function Keepers:reset_label(unit, is_converted, icon, ...)
     reset_label_original(self, unit, is_converted, BotWeapons and BotWeapons.settings.player_carry and icon == "pd2_loot" and "wp_arrow" or icon, ...)
   end
-  Keepers.ResetLabel = Keepers.reset_label
 
-  local set_joker_label_original = Keepers.SetJokerLabel or Keepers.set_joker_label
+  local set_joker_label_original = Keepers.set_joker_label
   function Keepers:set_joker_label(unit, ...)
     set_joker_label_original(self, unit, ...)
 
@@ -281,8 +292,7 @@ if Keepers and not HopHUD._modified_Keepers then
 
     unit:contour():change_color("friendly", tweak_data.peer_vector_colors[unit:base().kpr_minion_owner_peer_id] or tweak_data.contour.character.friendly_color)
   end
-  Keepers.SetJokerLabel = Keepers.set_joker_label
 
-  HopHUD._modified_Keepers = true
+  Keepers._modified_by_hophud = true
 
 end
