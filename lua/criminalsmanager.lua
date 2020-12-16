@@ -24,8 +24,6 @@ function CriminalsManager:character_color_id_by_unit(unit)
 	return character_color_id_by_unit_original(self, unit)
 end
 
-local remove_character_by_name_original = CriminalsManager.remove_character_by_name
-function CriminalsManager:remove_character_by_name(name)
-	remove_character_by_name_original(self, name)
+Hooks:PostHook(CriminalsManager, "remove_character_by_name", "remove_character_by_name_hophud", function (self, name)
 	taken_colors[name] = nil
-end
+end)

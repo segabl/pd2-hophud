@@ -2,10 +2,7 @@ if not HopHUD.settings.custom_timer then
 	return
 end
 
-local init_original = HUDHeistTimer.init
-function HUDHeistTimer:init(...)
-	init_original(self, ...)
-
+Hooks:PostHook(HUDHeistTimer, "init", "init_hophud", function (self)
 	self._timer_text:set_font(tweak_data.menu.pd2_large_font_id)
 	self._timer_text:set_font_size(28)
 
@@ -23,7 +20,7 @@ function HUDHeistTimer:init(...)
 	})
 	local _, _, _, rh = self._realtime_text:text_rect()
 	self._heist_timer_panel:set_h(self._heist_timer_panel:h() + rh)
-end
+end)
 
 local set_time_original = HUDHeistTimer.set_time
 function HUDHeistTimer:set_time(time)

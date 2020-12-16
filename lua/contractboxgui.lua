@@ -1,7 +1,4 @@
-local create_character_text_original = ContractBoxGui.create_character_text
-function ContractBoxGui:create_character_text(peer_id, x, y, text, icon)
-	create_character_text_original(self, peer_id, x, y, text, icon)
-
+Hooks:PostHook(ContractBoxGui, "create_character_text", "create_character_text_hophud", function (self, peer_id, x, y)
 	local name, level, rank, color_id = HopHUD:information_by_peer(managers.network:session():peer(peer_id))
 	HopHUD:set_name_panel_text(self._peers[peer_id], name, level, rank, color_id)
 
@@ -11,4 +8,4 @@ function ContractBoxGui:create_character_text(peer_id, x, y, text, icon)
 	if self._peers_icon and self._peers_icon[peer_id] then
 		self._peers_icon[peer_id]:set_right(self._peers[peer_id]:x())
 	end
-end
+end)
