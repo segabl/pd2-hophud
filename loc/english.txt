@@ -21,7 +21,6 @@
 	"hud_action_attaching_magnet" : "Attaching magnet",
 	"hud_action_fixing_saw" : "Fixing saw",
 	"hud_action_placing_saw" : "Placing saw",
-	"hud_action_opening_atm" : "Opening ATM",
 	"hud_action_plugging_in_power" : "Plugging in power",
 	"hud_action_rebooting_device" : "Rebooting device",
 	"hud_action_picking_up_c4" : "Picking up C4",

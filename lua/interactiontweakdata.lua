@@ -4,7 +4,7 @@ Hooks:PostHook(InteractionTweakData, "init", "init_hophud", function (self)
 	self.apartment_helicopter.action_text_id = "hud_action_attaching_magnet"
 	self.apartment_saw_jammed.action_text_id = "hud_action_fixing_saw"
 	self.apartment_saw.action_text_id = "hud_action_placing_saw"
-	self.atm_interaction.action_text_id = "hud_action_opening_atm"
+	self.atm_interaction.action_text_id = "hud_action_opening"
 	self.bank_note.action_text_id = "hud_action_searching_files"
 	self.bank_open_interaction.action_text_id = "hud_action_opening"
 	self.bex_open_window.action_text_id = "hud_action_picking_lock"
