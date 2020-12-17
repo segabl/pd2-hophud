@@ -84,12 +84,16 @@ if not HopHUD then
 		if not self.settings.damage_pops then
 			return
 		end
-		local attacker_info = HopLib:unit_info_manager():get_user_info(damage_info.attacker_unit)
+		if not alive(damage_info.attacker_unit) or not damage_info.attacker_unit:base() then
+			return
+		end
+		local attacker_unit = damage_info.attacker_unit:base().thrower_unit and damage_info.attacker_unit:base():thrower_unit() or damage_info.attacker_unit
+		local attacker_info = HopLib:unit_info_manager():get_info(attacker_unit)
 		if not attacker_info then
 			return
 		end
 		-- only show dmg pop if the attacker is on criminal team
-		local attacker_team = alive(attacker_info._unit) and attacker_info._unit:movement() and attacker_info._unit:movement():team()
+		local attacker_team = alive(attacker_info:unit()) and attacker_info:unit():movement() and attacker_info:unit():movement():team()
 		if not attacker_team or (attacker_team.id ~= "criminal1" and not attacker_team.friends.criminal1 and attacker_team.id ~= "hacked_turret") then
 			return
 		end
@@ -180,7 +184,7 @@ if not HopHUD then
 	end
 
 	function HopHUD:update_kill_counter(unit)
-		local info = HopLib:unit_info_manager():get_user_info(unit)
+		local info = HopLib:unit_info_manager():get_info(unit)
 		if not info then
 			return
 		end
