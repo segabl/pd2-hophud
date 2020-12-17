@@ -185,11 +185,11 @@ if not HopHUD then
 			return
 		end
 
-		if info._type ~= "player" and info._sub_type ~= "team_ai" then
+		if not info:type():find("player") and info:type() ~= "team_ai" then
 			return
 		end
 
-		local panel = info._sub_type == "local_player" and managers.hud:get_teammate_panel_by_peer()
+		local panel = info:type() == "local_player" and managers.hud:get_teammate_panel_by_peer()
 		if not panel then
 			local criminal_data = managers.criminals:character_data_by_unit(info._unit)
 			local panel_id = criminal_data and criminal_data.panel_id
@@ -216,8 +216,8 @@ if not HopHUD then
 		if not info then
 			return
 		end
-		local level = info._level or info._sub_type and managers.localization:text("hud_hophud_unit_type_" .. info._sub_type) or info._type:pretty(true)
-		return info:nickname(), level, info._rank, info._color_id
+		local level = info:level() or managers.localization:text("hud_hophud_unit_type_" .. info:type())
+		return info:nickname(), level, info:rank(), info:color_id()
 	end
 
 	function HopHUD:information_by_peer(peer)
