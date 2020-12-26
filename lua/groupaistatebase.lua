@@ -8,7 +8,7 @@ Hooks:PreHook(GroupAIStateBase, "_upd_criminal_suspicion_progress", "_upd_crimin
 			local unit = obs_susp_data.u_observer
 			if managers.enemy:is_civilian(unit) then
 				local waypoint = managers.hud._hud.waypoints["susp1" .. tostring(obs_key)]
-				if waypoint then
+				if waypoint and obs_susp_data.status ~= "called" then
 					if unit:anim_data().drop then
 						if not obs_susp_data._subdued_civ then
 							obs_susp_data._alerted_civ = nil
