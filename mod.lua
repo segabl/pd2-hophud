@@ -22,10 +22,15 @@ if not HopHUD then
 	HopHUD.settings = {
 		civilian_icons = true,
 		custom_timer = true,
-		damage_pops = true,
+		damage_pops = 1,
 		display_invulnerability = true
 	}
-	HopHUD.menu_builder = MenuBuilder:new("hophud", HopHUD.settings)
+	HopHUD.params = {
+		damage_pops = {
+			items = { "menu_hophud_damage_pops_all", "menu_hophud_damage_pops_players", "menu_hophud_damage_pops_mine", "menu_hophud_damage_pops_none" }
+		}
+	}
+	HopHUD.menu_builder = MenuBuilder:new("hophud", HopHUD.settings, HopHUD.params)
 
 	local DamagePop = class()
 	HopHUD.DamagePop = DamagePop
@@ -80,8 +85,12 @@ if not HopHUD then
 		self.dead = true
 	end
 
+	local max_damage_pop_setting = {
+		local_player = 3,
+		remote_player = 2
+	}
 	function HopHUD:add_damage_pop(unit, damage_info)
-		if not self.settings.damage_pops then
+		if not self.settings.damage_pops or self.settings.damage_pops > 3 then
 			return
 		end
 		if not alive(damage_info.attacker_unit) or not damage_info.attacker_unit:base() then
@@ -90,6 +99,9 @@ if not HopHUD then
 		local attacker_unit = damage_info.attacker_unit:base().thrower_unit and damage_info.attacker_unit:base():thrower_unit() or damage_info.attacker_unit
 		local attacker_info = HopLib:unit_info_manager():get_info(attacker_unit)
 		if not attacker_info then
+			return
+		end
+		if self.settings.damage_pops > (max_damage_pop_setting[attacker_info:type()] or 1) then
 			return
 		end
 		-- only show dmg pop if the attacker is on criminal team
