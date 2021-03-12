@@ -18,6 +18,8 @@
 	"menu_hophud_damage_pops_none" : "None",
 	"menu_hophud_display_invulnerability" : "Display invulnerability",
 	"menu_hophud_display_invulnerability_desc" : "Displays invulnerability triggered by armor breaking on your health bar",
+	"menu_hophud_health_colors" : "Colored player health",
+	"menu_hophud_health_colors_desc" : "Colors the player health circles according to their peer color",
 	"menu_hophud_kill_counter" : "Kill counter",
 	"menu_hophud_kill_counter_desc" : "Displays a kill counter on player name panels",
 	"menu_hophud_main_menu_panel" : "Main menu player panel",

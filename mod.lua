@@ -24,12 +24,17 @@ if not HopHUD then
 		custom_timer = true,
 		damage_pops = 1,
 		display_invulnerability = true,
+		health_colors = true,
 		kill_counter = true,
 		main_menu_panel = true
 	}
 	HopHUD.params = {
+		main_menu_panel = {
+			priority = 10
+		},
 		damage_pops = {
-			items = { "menu_hophud_damage_pops_all", "menu_hophud_damage_pops_players", "menu_hophud_damage_pops_mine", "menu_hophud_damage_pops_none" }
+			items = { "menu_hophud_damage_pops_all", "menu_hophud_damage_pops_players", "menu_hophud_damage_pops_mine", "menu_hophud_damage_pops_none" },
+			priority = -1
 		}
 	}
 	HopHUD.menu_builder = MenuBuilder:new("hophud", HopHUD.settings, HopHUD.params)

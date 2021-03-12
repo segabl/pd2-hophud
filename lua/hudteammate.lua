@@ -62,6 +62,9 @@ function HUDTeammate:animate_invulnerability(duration)
 end
 
 Hooks:PostHook(HUDTeammate, "set_callsign", "set_callsign_hophud", function (self, id)
+  if not HopHUD.settings.health_colors then
+    return
+  end
   local radial_health = self._radial_health_panel:child("radial_health")
   radial_health:set_image("guis/textures/pd2/hud_health_" .. id)
   radial_health:set_texture_rect(128, 0, -128, 128)
