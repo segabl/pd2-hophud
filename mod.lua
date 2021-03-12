@@ -24,6 +24,7 @@ if not HopHUD then
 		custom_timer = true,
 		damage_pops = 1,
 		display_invulnerability = true,
+		kill_counter = true,
 		main_menu_panel = true
 	}
 	HopHUD.params = {
