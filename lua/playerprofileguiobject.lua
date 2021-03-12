@@ -167,7 +167,7 @@ function PlayerProfileGuiObject:init(ws)
 	local unspent_text, skill_icon, skill_glow
 	if skillpoints > 0 then
 		unspent_text = panel:text({
-			y = math.round(offshore_text:bottom() + font_size * 0.5),
+			y = math.round(continental_text:bottom() + font_size * 0.5),
 			align = "center",
 			horizontal = "center",
 			layer = 1,
