@@ -86,3 +86,38 @@ function HUDManager:align_teammate_name_label(panel, interact)
 
 	self._add_label_data = nil
 end
+
+Hooks:PostHook(HUDManager, "set_ai_stopped", "set_ai_stopped_hophud", function (self, ai_id, stopped)
+	if not stopped then
+		return
+	end
+
+	local teammate_panel = self._teammate_panels[ai_id]
+	local panel = teammate_panel and teammate_panel._panel
+	if not panel then
+		return
+	end
+
+	local stop_icon = panel:child("stopped")
+	local callsign = panel:child("callsign")
+	if stop_icon and callsign then
+		stop_icon:set_right(callsign:left() - 4)
+	end
+
+	local label = nil
+	for _, lbl in ipairs(self._hud.name_labels) do
+		if lbl.id == ai_id then
+			label = lbl
+			break
+		end
+	end
+	if label then
+		local label_stop_icon = label.panel:child("stopped")
+		if label_stop_icon then
+			local ratio = label_stop_icon:texture_width() / label_stop_icon:texture_height()
+			label_stop_icon:set_size(label.text:h() * ratio, label.text:h())
+			label_stop_icon:set_right(label.text:left() - 4)
+			label_stop_icon:set_center_y(label.text:center_y() - 1)
+		end
+	end
+end)
