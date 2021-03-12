@@ -1,3 +1,7 @@
+if not HopHUD.settings.main_menu_panel then
+	return
+end
+
 function PlayerProfileGuiObject:init(ws)
 	local panel = ws:panel():panel()
 	local panel_width = 342
@@ -112,7 +116,7 @@ function PlayerProfileGuiObject:init(ws)
 	local offshore_text = panel:text({
 		x = panel_padding,
 		y = math.round(money_text:bottom()),
-		text = managers.localization:to_upper_text("menu_hophud_offshore_cash"),
+		text = managers.localization:to_upper_text("hud_offshore_account"),
 		font_size = font_size,
 		font = font,
 		color = tweak_data.screen_colors.text
@@ -128,6 +132,26 @@ function PlayerProfileGuiObject:init(ws)
 	})
 	self:_make_fine_text(offshore_cash_text)
 	offshore_cash_text:set_right(panel_width - panel_padding)
+
+	local continental_text = panel:text({
+		x = panel_padding,
+		y = math.round(offshore_text:bottom()),
+		text = managers.localization:to_upper_text("menu_es_coins_progress"),
+		font_size = font_size,
+		font = font,
+		color = tweak_data.screen_colors.text
+	})
+	self:_make_fine_text(continental_text)
+
+	local continental_coins_text = panel:text({
+		y = math.round(offshore_text:bottom()),
+		text = managers.experience:cash_string(math.floor(math.floor(managers.custom_safehouse:coins())), ""),
+		font_size = font_size,
+		font = font,
+		color = tweak_data.screen_colors.text:with_alpha(0.65)
+	})
+	self:_make_fine_text(continental_coins_text)
+	continental_coins_text:set_right(panel_width - panel_padding)
 
 	local perk_texture, perk_rect = tweak_data.skilltree:get_specialization_icon_data()
 	local perk_icon = panel:bitmap({
@@ -177,7 +201,7 @@ function PlayerProfileGuiObject:init(ws)
 
 	self._panel = panel
 
-	self._panel:set_size(panel_width, math.max(unspent_text and unspent_text:bottom() + panel_padding or offshore_text:bottom() + panel_padding, avatar_panel:bottom() + panel_padding))
+	self._panel:set_size(panel_width, math.max(unspent_text and unspent_text:bottom() + panel_padding or continental_text:bottom() + panel_padding, avatar_panel:bottom() + panel_padding))
 	self._panel:set_bottom(self._panel:parent():h() - 60)
 	BoxGuiObject:new(self._panel, {sides = { 1, 1, 1, 1 }})
 

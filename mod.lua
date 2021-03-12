@@ -23,7 +23,8 @@ if not HopHUD then
 		civilian_icons = true,
 		custom_timer = true,
 		damage_pops = 1,
-		display_invulnerability = true
+		display_invulnerability = true,
+		main_menu_panel = true
 	}
 	HopHUD.params = {
 		damage_pops = {
