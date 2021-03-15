@@ -20,6 +20,7 @@ if not HopHUD then
 		action = Color.white:with_alpha(0.8)
 	}
 	HopHUD.settings = {
+		chat_sounds = true,
 		civilian_icons = true,
 		custom_timer = true,
 		damage_pops = 1,
@@ -29,12 +30,15 @@ if not HopHUD then
 		main_menu_panel = true
 	}
 	HopHUD.params = {
-		main_menu_panel = {
-			priority = 10
+		chat_sounds = {
+			priority = 9
 		},
 		damage_pops = {
 			items = { "menu_hophud_damage_pops_all", "menu_hophud_damage_pops_players", "menu_hophud_damage_pops_mine", "menu_hophud_damage_pops_none" },
 			priority = -1
+		},
+		main_menu_panel = {
+			priority = 10
 		}
 	}
 	HopHUD.menu_builder = MenuBuilder:new("hophud", HopHUD.settings, HopHUD.params)
@@ -276,6 +280,12 @@ if not HopHUD then
 		local loc = managers.localization
 		HopLib:load_localization(HopHUD.mod_path .. "loc/", loc)
 		HopHUD.menu_builder:create_menu(nodes)
+	end)
+
+	Hooks:Add("ChatManagerOnReceiveMessage", "ChatManagerOnReceiveMessageHopHud", function(self, channel_id)
+		if channel_id == 1 and HopHUD.settings.chat_sounds then
+			managers.menu_component:post_event("menu_enter")
+		end
 	end)
 
 end

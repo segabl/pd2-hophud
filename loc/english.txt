@@ -6,6 +6,8 @@
 	"menu_hophud_unspent_points" : "$AMOUNT unspent skill points",
 	"menu_hophud" : "HopHUD",
 	"menu_hophud_desc" : "Customize HopHUD",
+	"menu_hophud_chat_sounds" : "Chat sounds",
+	"menu_hophud_chat_sounds_desc" : "Plays a sound when receiving chat messages",
 	"menu_hophud_civilian_icons" : "Subdued Civilian Icons",
 	"menu_hophud_civilian_icons_desc" : "Changes the waypoint icons of subdued civilians",
 	"menu_hophud_custom_timer" : "Custom Heist Timer",
