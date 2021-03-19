@@ -20,6 +20,7 @@ if not HopHUD then
 		action = Color.white:with_alpha(0.8)
 	}
 	HopHUD.settings = {
+		bot_colors = true,
 		chat_sounds = true,
 		civilian_icons = true,
 		custom_timer = true,

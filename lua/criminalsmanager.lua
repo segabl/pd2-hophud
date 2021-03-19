@@ -1,3 +1,7 @@
+if not HopHUD.settings.bot_colors then
+	return
+end
+
 local taken_colors = {}
 
 local character_color_id_by_unit_original = CriminalsManager.character_color_id_by_unit

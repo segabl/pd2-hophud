@@ -6,6 +6,8 @@
 	"menu_hophud_unspent_points" : "$AMOUNT unspent skill points",
 	"menu_hophud" : "HopHUD",
 	"menu_hophud_desc" : "Customize HopHUD",
+	"menu_hophud_bot_colors" : "Bot colors",
+	"menu_hophud_bot_colors_desc" : "Colors bot labels and UI elements with player colors",
 	"menu_hophud_chat_sounds" : "Chat sounds",
 	"menu_hophud_chat_sounds_desc" : "Plays a sound when receiving chat messages",
 	"menu_hophud_civilian_icons" : "Subdued Civilian Icons",
