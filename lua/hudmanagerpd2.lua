@@ -62,11 +62,14 @@ function HUDManager:align_teammate_name_label(panel, interact)
 		infamy:set_lefttop(double_radius + 4, 2)
 	end
 
-	if text:text() ~= "" then
-		HopHUD:set_name_panel_text(text, name, level, rank, color_id)
-	end
+	local empty = text:text() == ""
+	HopHUD:set_name_panel_text(text, name, level, rank, color_id)
 	local _, _, tw, th = text:text_rect()
 	text:set_size(tw, th)
+	if empty then
+		text:set_text("")
+		text:set_w(0)
+	end
 	text:set_lefttop(double_radius + 4 + (infamy and infamy:w() or 0), 0)
 
 	local _, _, aw, ah = action:text_rect()
