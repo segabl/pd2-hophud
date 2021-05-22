@@ -284,7 +284,7 @@ if not HopHUD then
 		HopHUD.menu_builder:create_menu(nodes)
 	end)
 
-	Hooks:Add("ChatManagerOnReceiveMessage", "ChatManagerOnReceiveMessageHopHud", function(self, channel_id)
+	Hooks:Add("ChatManagerOnReceiveMessage", "ChatManagerOnReceiveMessageHopHud", function(channel_id)
 		if channel_id == 1 and HopHUD.settings.chat_sounds then
 			managers.menu_component:post_event("menu_enter")
 		end
