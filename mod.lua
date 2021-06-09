@@ -321,11 +321,17 @@ if Keepers and not Keepers._modified_by_hophud then
 			return
 		end
 
+		local owner_id = unit:base().kpr_minion_owner_peer_id
+		if not owner_id then
+			local info = HopLib:unit_info_manager():get_info(unit)
+			owner_id = info and info:owner() and info:owner():peer() and info:owner():peer():id() or 1
+		end
+
 		local radial_health = name_label.panel:child("bag")
-		radial_health:set_image("guis/textures/pd2/hud_health_" .. unit:base().kpr_minion_owner_peer_id)
+		radial_health:set_image("guis/textures/pd2/hud_health_" .. owner_id)
 		radial_health:set_blend_mode("normal")
 
-		unit:contour():change_color("friendly", tweak_data.peer_vector_colors[unit:base().kpr_minion_owner_peer_id] or tweak_data.contour.character.friendly_color)
+		unit:contour():change_color("friendly", tweak_data.peer_vector_colors[owner_id] or tweak_data.contour.character.friendly_color)
 	end
 
 	Keepers._modified_by_hophud = true
