@@ -28,6 +28,8 @@
 	"menu_hophud_kill_counter_desc" : "Displays a kill counter on player name panels",
 	"menu_hophud_main_menu_panel" : "Main menu player panel",
 	"menu_hophud_main_menu_panel_desc" : "Improves the player panel in the main menu",
+	"menu_hophud_hq_fonts" : "Use high quality fonts",
+	"menu_hophud_hq_fonts_desc" : "Uses higher quality fonts where available",
 	"hud_hophud_unit_type_team_ai" : "Bot",
 	"hud_hophud_unit_type_joker" : "Joker",
 	"hud_hophud_unit_type_vehicle" : "Vehicle",

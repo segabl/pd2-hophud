@@ -28,7 +28,8 @@ if not HopHUD then
 		display_invulnerability = true,
 		health_colors = true,
 		kill_counter = true,
-		main_menu_panel = true
+		main_menu_panel = true,
+		hq_fonts = true
 	}
 	HopHUD.params = {
 		chat_sounds = {
@@ -294,6 +295,23 @@ end
 
 if tweak_data then
 	tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
+
+	if HopHUD.settings.hq_fonts then
+		tweak_data.hud.small_font = tweak_data.hud.medium_font
+		tweak_data.menu.small_font = tweak_data.menu.medium_font
+		tweak_data.menu.small_font_no_shadow = tweak_data.menu.medium_font_no_outline
+		tweak_data.menu.pd2_small_font = tweak_data.menu.pd2_medium_font
+		tweak_data.menu.pd2_medium_font = tweak_data.menu.pd2_large_font
+
+		tweak_data.hud_players.name_font = tweak_data.menu.pd2_small_font
+		tweak_data.hud_present.title_font = tweak_data.menu.pd2_medium_font
+		tweak_data.hud_present.text_font = tweak_data.menu.pd2_medium_font
+		tweak_data.hud_mask_off.text_font = tweak_data.menu.pd2_medium_font
+		tweak_data.hud_stats.objectives_font = tweak_data.menu.pd2_medium_font
+		tweak_data.hud_stats.objective_desc_font = tweak_data.menu.pd2_medium_font
+		tweak_data.hud_corner.assault_font = tweak_data.menu.pd2_medium_font
+		tweak_data.hud_custody.custody_font = tweak_data.menu.pd2_medium_font
+	end
 end
 
 if RequiredScript then
