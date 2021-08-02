@@ -24,7 +24,14 @@ if not HopHUD then
 		chat_sounds = true,
 		civilian_icons = true,
 		custom_timer = true,
-		damage_pops = 1,
+		damage_pops = {
+			local_player = true,
+			remote_player = true,
+			team_ai = true,
+			joker = true,
+			sentry = true,
+			npc = true,
+		},
 		display_invulnerability = true,
 		health_colors = true,
 		kill_counter = true,
@@ -32,16 +39,15 @@ if not HopHUD then
 		hq_fonts = true
 	}
 	HopHUD.params = {
-		chat_sounds = {
-			priority = 9
-		},
-		damage_pops = {
-			items = { "menu_hophud_damage_pops_all", "menu_hophud_damage_pops_players", "menu_hophud_damage_pops_mine", "menu_hophud_damage_pops_none" },
-			priority = -1
-		},
-		main_menu_panel = {
-			priority = 10
-		}
+		chat_sounds = { priority = 9 },
+		damage_pops = { priority = -1 },
+		main_menu_panel = { priority = 10 },
+		local_player = { priority = 10 },
+		remote_player = { priority = 9 },
+		team_ai = { priority = 8 },
+		joker = { priority = 7 },
+		sentry = { priority = 6 },
+		npc = { priority = 5 },
 	}
 	HopHUD.menu_builder = MenuBuilder:new("hophud", HopHUD.settings, HopHUD.params)
 
@@ -98,14 +104,7 @@ if not HopHUD then
 		self.dead = true
 	end
 
-	local max_damage_pop_setting = {
-		local_player = 3,
-		remote_player = 2
-	}
 	function HopHUD:add_damage_pop(unit, damage_info)
-		if not self.settings.damage_pops or self.settings.damage_pops > 3 then
-			return
-		end
 		if not alive(damage_info.attacker_unit) or not damage_info.attacker_unit:base() then
 			return
 		end
@@ -114,7 +113,8 @@ if not HopHUD then
 		if not attacker_info then
 			return
 		end
-		if self.settings.damage_pops > (max_damage_pop_setting[attacker_info:type()] or 1) then
+		local owner = attacker_info:owner()
+		if not self.settings.damage_pops[attacker_info:type()] or owner and not self.settings.damage_pops[owner:type()] then
 			return
 		end
 		-- only show dmg pop if the attacker is on criminal team
