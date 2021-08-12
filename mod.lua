@@ -31,6 +31,7 @@ if not HopHUD then
 			joker = true,
 			sentry = true,
 			npc = true,
+			combine_pops = false
 		},
 		display_invulnerability = true,
 		health_colors = true,
@@ -54,7 +55,7 @@ if not HopHUD then
 	local DamagePop = class()
 	HopHUD.DamagePop = DamagePop
 
-	function DamagePop:init(position, damage, is_head, is_kill, is_special, color)
+	function DamagePop:init(position, damage, is_kill, is_special, color)
 		self._panel = HopHUD._panel:panel({
 			name = "panel",
 			visible = false
@@ -74,6 +75,7 @@ if not HopHUD then
 		local _, _, w, h = text:text_rect()
 		self._panel:set_size(w, h)
 
+		self._damage = damage
 		self._position = position
 		self._created_t = HopHUD._t
 		self._lifetime = 1
@@ -123,20 +125,29 @@ if not HopHUD then
 			return
 		end
 		local info = HopLib:unit_info_manager():get_info(unit)
+		local unit_dmg = unit:character_damage()
 		local col_ray = damage_info.col_ray or {}
-		local pos = col_ray.position or damage_info.pos or col_ray.hit_position or unit:position() + Vector3(0, 0, 80)
-		local unit_damage = unit:character_damage()
-		local is_head = unit_damage.is_head and unit_damage:is_head(col_ray.body)
-		local is_kill = unit_damage._dead
-		local is_special = info._is_special or info._is_boss
-		local color_id = attacker_info._color_id
+		local pos = not damage_info.fire_dot_data and (col_ray.position or col_ray.hit_position or damage_info.pos) or mvector3.copy(unit:movement():m_stand_pos())
+		local color = attacker_info._color_id and attacker_info._color_id < #tweak_data.chat_colors and tweak_data.chat_colors[attacker_info._color_id]
 
-		local pop = DamagePop:new(pos, damage_info.damage * 10, is_head, is_kill, is_special, color_id and color_id < #tweak_data.chat_colors and tweak_data.chat_colors[color_id])
+		local add_dmg = 0
+		if self.settings.damage_pops.combine_pops then
+			local last_dmg_pop = unit_dmg._last_dmg_pop and unit_dmg._last_dmg_pop[attacker_info:key()]
+			if last_dmg_pop and not last_dmg_pop.dead and last_dmg_pop._created_t + 0.1 > self._t then
+				add_dmg = last_dmg_pop._damage
+				last_dmg_pop:destroy()
+			end
+		end
+
+		local pop = DamagePop:new(pos, damage_info.damage * 10 + add_dmg, unit_dmg._dead, info:is_special() or info:is_boss(), color)
 		if self.damage_pops[self.damage_pop_key] then
 			self.damage_pops[self.damage_pop_key]:destroy()
 		end
 		self.damage_pops[self.damage_pop_key] = pop
 		self.damage_pop_key = (self.damage_pop_key < 1000 and self.damage_pop_key or 0) + 1
+
+		unit_dmg._last_dmg_pop = unit_dmg._last_dmg_pop or {}
+		unit_dmg._last_dmg_pop[attacker_info:key()] = pop
 	end
 
 	function HopHUD:init()
