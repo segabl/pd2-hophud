@@ -21,6 +21,7 @@ if not HopHUD then
 	}
 	HopHUD.settings = {
 		bot_colors = true,
+		joker_colors = true,
 		chat_sounds = true,
 		civilian_icons = true,
 		custom_timer = true,
@@ -133,7 +134,7 @@ if not HopHUD then
 		local add_dmg = 0
 		if self.settings.damage_pops.combine_pops then
 			local last_dmg_pop = unit_dmg._last_dmg_pop and unit_dmg._last_dmg_pop[attacker_info:key()]
-			if last_dmg_pop and not last_dmg_pop.dead and last_dmg_pop._created_t + 0.1 > self._t then
+			if last_dmg_pop and not last_dmg_pop.dead and last_dmg_pop._created_t + 0.05 > self._t then
 				add_dmg = last_dmg_pop._damage
 				last_dmg_pop:destroy()
 			end
@@ -286,6 +287,10 @@ if not HopHUD then
 	end)
 
 	Hooks:Add("HopLibOnMinionAdded", "HopLibOnMinionAddedHopHud", function (unit, player_unit)
+		if not HopHUD.settings.joker_colors then
+			return
+		end
+
 		local color = tweak_data.peer_vector_colors[player_unit and player_unit:network():peer():id() or managers.network:session():local_peer():id()] or tweak_data.contour.character.friendly_color
 		unit:contour():change_color("friendly", color)
 	end)
