@@ -66,6 +66,9 @@ Hooks:PostHook(HUDTeammate, "set_callsign", "set_callsign_hophud", function (sel
 		return
 	end
 	local radial_health = self._radial_health_panel:child("radial_health")
+	if type(radial_health) ~= "userdata" then
+		return
+	end
 	radial_health:set_image("guis/textures/pd2/hud_health_" .. id)
 	radial_health:set_texture_rect(128, 0, -128, 128)
 end)
