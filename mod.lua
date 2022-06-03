@@ -198,12 +198,12 @@ if not HopHUD then
 	function HopHUD:set_teammate_name_panel(panel, name, color_id)
 		local teammate_panel = panel._panel
 		local name_panel = teammate_panel:child("name")
-		local right_panel = panel._kills_bg or panel._downs_bg or name_panel
+		local right_panel = panel._kills_icon or panel._downs_icon or name_panel
 		local trimmed_name = name
 		while utf8.len(trimmed_name) > 0 do
 			panel:set_name(name)
 			panel:_update_down_counter()
-			if right_panel:right() > teammate_panel:w() then
+			if right_panel:right() + tweak_data.hud_players.name_size > teammate_panel:w() then
 				trimmed_name = utf8.sub(trimmed_name, 1, -2)
 				name = trimmed_name .. "..."
 			else
