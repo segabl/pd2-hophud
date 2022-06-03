@@ -6,6 +6,7 @@ if not HopHUD then
 		{ ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_2"), file = ModPath .. "assets/guis/textures/pd2/hud_health_2.dds" },
 		{ ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_3"), file = ModPath .. "assets/guis/textures/pd2/hud_health_3.dds" },
 		{ ext = tex_ids, path = Idstring("guis/textures/pd2/hud_health_4"), file = ModPath .. "assets/guis/textures/pd2/hud_health_4.dds" },
+		{ ext = tex_ids, path = Idstring("guis/textures/pd2/kills_icon"), file = ModPath .. "assets/guis/textures/pd2/kills_icon.dds" },
 		{ ext = tex_ids, path = Idstring("guis/textures/pd2/wp_checkmark"), file = ModPath .. "assets/guis/textures/pd2/wp_checkmark.dds" }
 	})
 
