@@ -38,6 +38,8 @@
 	"menu_hophud_main_menu_panel_desc" : "Mejora el panel del jugador en el menú principal",
 	"menu_hophud_hq_fonts" : "Usar fuentes de alta calidad",
 	"menu_hophud_hq_fonts_desc" : "Usa fuentes de mayor calidad donde estén disponibles",
+	"menu_hophud_restore_callsigns" : "Restore callsigns",
+	"menu_hophud_restore_callsigns_desc" : "Restores the colored circles next to player names",
 	"hud_hophud_unit_type_team_ai" : "Bot",
 	"hud_hophud_unit_type_joker" : "Joker",
 	"hud_hophud_unit_type_vehicle" : "Vehículo",

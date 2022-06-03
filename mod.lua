@@ -38,7 +38,8 @@ if not HopHUD then
 		health_colors = true,
 		kill_counter = true,
 		main_menu_panel = true,
-		hq_fonts = true
+		hq_fonts = true,
+		restore_callsigns = true
 	}
 	HopHUD.params = {
 		chat_sounds = { priority = 9 },
@@ -188,25 +189,22 @@ if not HopHUD then
 		local rank_string, level_string = self:rank_and_level_string(rank, level)
 		local name_string = rank_string .. level_string .. " " .. tostring(name)
 		text:set_text(name_string)
-		if color_id and tweak_data.chat_colors[color_id] then
-			text:set_range_color(0 + utf8.len(rank_string .. level_string), 0 + utf8.len(name_string), tweak_data.chat_colors[color_id])
-		else
-			text:set_range_color(0 + utf8.len(rank_string .. level_string), 0 + utf8.len(name_string), Color.white)
-		end
+		text:set_range_color(0 + utf8.len(rank_string .. level_string), 0 + utf8.len(name_string), tweak_data.chat_colors[color_id] or Color.white)
 		text:set_range_color(0, 0 + utf8.len(rank_string), HopHUD.colors.rank)
 		text:set_range_color(0 + utf8.len(rank_string), 0 + utf8.len(rank_string .. level_string), HopHUD.colors.level)
 	end
 
 	function HopHUD:set_teammate_name_panel(panel, name, color_id)
-		local name_panel = panel._panel:child("name")
-		local o_name = name
-		while true do
-			local name_string = name
-			panel:set_name(name_string)
-			local _, _, name_w, _ = name_panel:text_rect()
-			if name_w > panel._panel:w() - name_panel:left() - 48 and utf8.len(o_name) > 0 then
-				o_name = o_name:sub(1, utf8.len(o_name) - 1)
-				name = o_name .. "..."
+		local teammate_panel = panel._panel
+		local name_panel = teammate_panel:child("name")
+		local right_panel = panel._kills_bg or panel._downs_bg or name_panel
+		local trimmed_name = name
+		while utf8.len(trimmed_name) > 0 do
+			panel:set_name(name)
+			panel:_update_down_counter()
+			if right_panel:right() > teammate_panel:w() then
+				trimmed_name = utf8.sub(trimmed_name, 1, -2)
+				name = trimmed_name .. "..."
 			else
 				break
 			end

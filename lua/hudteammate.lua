@@ -1,52 +1,79 @@
 Hooks:PostHook(HUDTeammate, "init", "init_hophud", function (self)
-	if not HopHUD.settings.kill_counter then
-		return
-	end
+	local name = self._panel:child("name")
+	local name_bg = self._panel:child("name_bg")
+	local bg_color = Color.white / 3
+	local bg_rect = { 84, 0, 44, 32 }
 
-	local teammate_panel = self._panel
-	local name = teammate_panel:child("name")
-	local _, _, name_w, _ = name:text_rect()
-
-	self._skull = teammate_panel:text({
-		name = "skull",
+	self._downs_icon = self._panel:bitmap({
+		name = "down_icon",
+		texture = "guis/textures/pd2/arrow_downcounter",
 		layer = 1,
-		text = "",
-		color = Color.yellow,
-		font_size = tweak_data.hud_players.name_size,
-		font = tweak_data.menu.pd2_medium_font
+		h = tweak_data.hud_players.name_size,
+		w = tweak_data.hud_players.name_size * 0.5,
 	})
-	managers.hud:make_fine_text(self._skull)
-	local _, _, skull_w, skull_h = self._skull:text_rect()
-	self._skull:set_size(skull_w, skull_h)
-	self._skull:set_x(name:left() + name_w + 10)
-	self._skull:set_center_y(name:center_y())
 
-	self._kills = teammate_panel:text({
-		name = "kills",
-		vertical = "bottom",
-		y = 0,
+	self._downs = self._panel:text({
+		name = "downs",
+		vertical = "center",
 		layer = 1,
 		text = "0",
 		color = Color.white,
 		font_size = tweak_data.hud_players.name_size,
-		font = tweak_data.hud_players.name_font
+		font = tweak_data.hud_players.name_font,
+		h = name_bg:h()
 	})
-	local _, _, kills_w, kills_h = self._kills:text_rect()
-	self._kills:set_h(kills_h)
-	self._kills:set_x(self._skull:left() + skull_w)
-	self._kills:set_bottom(name:bottom())
 
-	self._kills_bg = teammate_panel:bitmap({
+	self._downs_bg = self._panel:bitmap({
+		name = "downs_bg",
+		layer = 0,
+		texture = "guis/textures/pd2/hud_tabs",
+		texture_rect = bg_rect,
+		color = bg_color,
+		h = name_bg:h()
+	})
+
+	self._player_panel:child("revive_panel"):set_visible(false)
+
+	if HopHUD.settings.restore_callsigns then
+		self._panel:child("callsign_bg"):set_visible(true)
+		self._panel:child("callsign"):set_visible(true)
+	else
+		name:set_x(name:x() - name:h())
+		name_bg:set_x(name:x())
+	end
+
+	if not HopHUD.settings.kill_counter then
+		return
+	end
+
+	self._kills_icon = self._panel:bitmap({
+		name = "skull",
+		texture = "guis/textures/pd2/risklevel_blackscreen",
+		layer = 1,
+		color = Color.yellow,
+		h = tweak_data.hud_players.name_size,
+		w = tweak_data.hud_players.name_size,
+	})
+
+	self._kills = self._panel:text({
+		name = "kills",
+		vertical = "center",
+		layer = 1,
+		text = "0",
+		color = Color.white,
+		font_size = tweak_data.hud_players.name_size,
+		font = tweak_data.hud_players.name_font,
+		h = name_bg:h()
+	})
+
+	self._kills_bg = self._panel:bitmap({
 		name = "kills_bg",
 		visible = true,
 		layer = 0,
 		texture = "guis/textures/pd2/hud_tabs",
-		texture_rect = { 84, 0, 44, 32 },
-		color = Color.white / 3,
-		x = self._skull:x() - 2,
-		y = name:y() - 1,
-		w = skull_w + kills_w + 6,
-		h = name:h()
+		texture_rect = bg_rect,
+		color = bg_color,
+		h = name_bg:h()
 	})
 end)
 
@@ -61,6 +88,29 @@ function HUDTeammate:animate_invulnerability(duration)
 	end)
 end
 
+Hooks:PostHook(HUDTeammate, "set_state", "set_state_hophud", function (self, state)
+	local is_player = state == "player"
+
+	self._downs_bg:set_visible(is_player)
+	self._downs_icon:set_visible(is_player)
+	self._downs:set_visible(is_player)
+
+	if not self._main_player and not HopHUD.settings.restore_callsigns then
+		local name = self._panel:child("name")
+		local name_bg = self._panel:child("name_bg")
+		name:set_x(name:x() - name:h())
+		name_bg:set_x(name:x())
+	end
+
+	self:_update_down_counter()
+end)
+
+Hooks:PostHook(HUDTeammate, "set_revives_amount", "set_revives_amount_hophud", function (self, revive_amount)
+	self._downs:set_color(revive_amount > 1 and Color.white or Color.red)
+	self._downs:set_text(tostring(revive_amount))
+	self:_update_down_counter()
+end)
+
 Hooks:PostHook(HUDTeammate, "set_callsign", "set_callsign_hophud", function (self, id)
 	if not HopHUD.settings.health_colors then
 		return
@@ -73,19 +123,34 @@ Hooks:PostHook(HUDTeammate, "set_callsign", "set_callsign_hophud", function (sel
 	radial_health:set_texture_rect(128, 0, -128, 128)
 end)
 
+function HUDTeammate:_update_down_counter()
+	local name_bg = self._panel:child("name_bg")
+
+	self._downs_bg:set_x(name_bg:right() + 2)
+	self._downs_bg:set_y(name_bg:y())
+	self._downs_icon:set_x(self._downs_bg:x() + 2)
+	self._downs_icon:set_center_y(self._downs_bg:center_y())
+	self._downs:set_x(self._downs_icon:right() + 2)
+	self._downs:set_y(name_bg:y())
+	local _, _, downs_w, _ = self._downs:text_rect()
+	self._downs_bg:set_w(2 + self._downs_icon:w() + 2 + downs_w + 4)
+
+	self:_update_kill_panel()
+end
+
 function HUDTeammate:_update_kill_panel()
 	if not self._kills then
 		return
 	end
-	local teammate_panel = self._panel
-	local name = teammate_panel:child("name")
-	local _, _, name_w, _ = name:text_rect()
-	local _, _, skull_w, _ = self._skull:text_rect()
-	self._skull:set_x(name:left() + name_w + 10)
-	self._skull:set_center_y(name:center_y())
+
+	local align_point = self._downs_bg:visible() and self._downs_bg or self._panel:child("name_bg")
+
+	self._kills_bg:set_x(align_point:right() + 2)
+	self._kills_bg:set_y(align_point:y())
+	self._kills_icon:set_x(self._kills_bg:x())
+	self._kills_icon:set_center_y(self._kills_bg:center_y())
+	self._kills:set_x(self._kills_icon:right())
+	self._kills:set_y(align_point:y())
 	local _, _, kills_w, _ = self._kills:text_rect()
-	self._kills:set_x(self._skull:left() + skull_w + 2)
-	self._kills:set_bottom(name:bottom())
-	self._kills_bg:set_position(self._skull:x() - 2, name:y() - 1)
-	self._kills_bg:set_w(skull_w + kills_w + 6)
+	self._kills_bg:set_w(self._kills_icon:w() + kills_w + 4)
 end
