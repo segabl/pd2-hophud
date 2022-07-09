@@ -39,12 +39,14 @@ if not HopHUD then
 		health_colors = true,
 		kill_counter = true,
 		main_menu_panel = true,
-		hq_fonts = true,
+		hq_fonts = false,
 		restore_callsigns = true,
 		label_unit_type = true
 	}
 	HopHUD.params = {
 		chat_sounds = { priority = 9 },
+		bot_colors = { priority = 8 },
+		joker_colors = { priority = 7 },
 		damage_pops = { priority = -1 },
 		main_menu_panel = { priority = 10 },
 		local_player = { priority = 10 },
@@ -349,6 +351,10 @@ if Keepers and not Keepers._modified_by_hophud then
 	local set_joker_label_original = Keepers.set_joker_label
 	function Keepers:set_joker_label(unit, ...)
 		set_joker_label_original(self, unit, ...)
+
+		if not HopHUD.settings.joker_colors then
+			return
+		end
 
 		local owner_id = unit:base().kpr_minion_owner_peer_id
 		if not owner_id then
