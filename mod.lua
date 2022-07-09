@@ -224,7 +224,10 @@ if not HopHUD then
 
 	function HopHUD:update_kill_counter(unit)
 		local info = HopLib:unit_info_manager():get_info(unit)
-		info = info and info._update_owner_stats and info:owner() or info
+		if info and info._update_owner_stats then
+			info = info:owner() or info
+		end
+
 		if not info then
 			return
 		end

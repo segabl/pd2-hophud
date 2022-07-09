@@ -2,10 +2,9 @@
 	"name" : "HopHUD",
 	"description" : "Hoppip's custom HUD",
 	"author" : "Hoppip",
-	"contact" : "Hoppip#1630",
 	"color" : "0.043 0.808 0.6",
 	"image" : "mod.png",
-	"version" : "1.7",
+	"version" : "1.7.1",
 	"updates" : [{
 		"identifier" : "pd2-hophud",
 		"host": { "meta": "https://updates.hoppip.at/pd2-hophud" }
