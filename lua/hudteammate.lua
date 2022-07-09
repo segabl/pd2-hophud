@@ -106,7 +106,7 @@ end)
 
 Hooks:PostHook(HUDTeammate, "set_revives_amount", "set_revives_amount_hophud", function (self, revive_amount)
 	self._downs:set_color(revive_amount > 1 and Color.white or Color.red)
-	self._downs:set_text(tostring(revive_amount))
+	self._downs:set_text(tostring(math.max(revive_amount - 1, 0)))
 	self:_update_down_counter()
 end)
 
