@@ -40,6 +40,8 @@
 	"menu_hophud_hq_fonts_desc" : "Uses higher quality fonts where available",
 	"menu_hophud_restore_callsigns" : "Restore callsigns",
 	"menu_hophud_restore_callsigns_desc" : "Restores the colored circles next to player names",
+	"menu_hophud_label_unit_type" : "Display unit types",
+	"menu_hophud_label_unit_type_desc" : "Displays the type of unit on non-player name labels",
 	"hud_hophud_unit_type_team_ai" : "Bot",
 	"hud_hophud_unit_type_joker" : "Joker",
 	"hud_hophud_unit_type_vehicle" : "Vehicle",

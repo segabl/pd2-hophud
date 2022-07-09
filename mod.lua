@@ -40,7 +40,8 @@ if not HopHUD then
 		kill_counter = true,
 		main_menu_panel = true,
 		hq_fonts = true,
-		restore_callsigns = true
+		restore_callsigns = true,
+		label_unit_type = true
 	}
 	HopHUD.params = {
 		chat_sounds = { priority = 9 },
@@ -182,7 +183,7 @@ if not HopHUD then
 
 	function HopHUD:rank_and_level_string(rank, level)
 		local rank_string = rank and rank > 0 and (managers.experience:rank_string(rank) .. "Ї") or ""
-		local level_string = level ~= nil and tostring(level) or ""
+		local level_string = level and tostring(level) or ""
 		return rank_string, level_string
 	end
 
@@ -257,7 +258,7 @@ if not HopHUD then
 		if not info then
 			return
 		end
-		local level = info:level() or managers.localization:text("hud_hophud_unit_type_" .. info:type())
+		local level = info:level() or self.settings.label_unit_type and managers.localization:text("hud_hophud_unit_type_" .. info:type())
 		return info:nickname(), level, info:rank(), info:color_id()
 	end
 
