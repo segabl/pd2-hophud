@@ -23,7 +23,7 @@ function CriminalsManager:character_color_id_by_unit(unit)
 				end
 			end
 		end
-		return taken_colors[name] or 5
+		return taken_colors[name] or #tweak_data.chat_colors
 	end
 	return character_color_id_by_unit_original(self, unit)
 end
