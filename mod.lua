@@ -335,14 +335,7 @@ if tweak_data then
 	end
 end
 
-if RequiredScript then
-
-	local fname = HopHUD.mod_path .. RequiredScript:gsub(".+/(.+)", "lua/%1.lua")
-	if io.file_is_readable(fname) then
-		dofile(fname)
-	end
-
-end
+HopLib:run_required(HopHUD.mod_path .. "lua/")
 
 if Keepers and not Keepers._modified_by_hophud then
 
