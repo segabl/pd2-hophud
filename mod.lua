@@ -296,7 +296,8 @@ if not HopHUD then
 			return
 		end
 
-		local color = tweak_data.peer_vector_colors[player_unit and player_unit:network():peer():id() or managers.network:session():local_peer():id()] or tweak_data.contour.character.friendly_color
+		local info = HopLib:unit_info_manager():get_info(player_unit)
+		local color = tweak_data.peer_vector_colors[info and info:color_id()] or tweak_data.contour.character.friendly_color
 		unit:contour():change_color("friendly", color)
 	end)
 
