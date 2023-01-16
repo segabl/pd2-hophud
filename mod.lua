@@ -47,7 +47,7 @@ if not HopHUD then
 		chat_sounds = { priority = 9 },
 		bot_colors = { priority = 8 },
 		joker_colors = { priority = 7 },
-		damage_pops = { priority = -1 },
+		damage_pops = { divider = -16, priority = -1000 },
 		main_menu_panel = { priority = 10 },
 		local_player = { priority = 10 },
 		remote_player = { priority = 9 },
@@ -55,6 +55,7 @@ if not HopHUD then
 		joker = { priority = 7 },
 		sentry = { priority = 6 },
 		npc = { priority = 5 },
+		combine_pops = { divider = -16, priority = -1000 }
 	}
 	HopHUD.menu_builder = MenuBuilder:new("hophud", HopHUD.settings, HopHUD.params)
 
