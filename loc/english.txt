@@ -30,6 +30,8 @@
 	"menu_hophud_npc" : "Show general NPC damage",
 	"menu_hophud_display_invulnerability" : "Display invulnerability",
 	"menu_hophud_display_invulnerability_desc" : "Displays invulnerability triggered by armor breaking on your health bar",
+	"menu_hophud_display_bulletstorm" : "Display Bulletstorm",
+	"menu_hophud_display_bulletstorm_desc" : "Displays an infinite ammo indicator when under the effect of Bulletstorm",
 	"menu_hophud_health_colors" : "Colored player health",
 	"menu_hophud_health_colors_desc" : "Colors the player health circles according to their peer color",
 	"menu_hophud_kill_counter" : "Kill counter",

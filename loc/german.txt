@@ -30,6 +30,8 @@
 	"menu_hophud_npc" : "Zeige Schaden von anderen NPCs",
 	"menu_hophud_display_invulnerability" : "Zeige Unverwundbarkeit an",
 	"menu_hophud_display_invulnerability_desc" : "Zeigt Unverwundbarkeit die durch Brechen der Rüstung entsteht auf der Gesundheitsanzeige an",
+	"menu_hophud_display_bulletstorm" : "Zeige Kugelhagel an",
+	"menu_hophud_display_bulletstorm_desc" : "Zeigt unendliche Munition an wenn unter dem Effekt von Kugelhagel",
 	"menu_hophud_health_colors" : "Gefärbte Spieler-Gesundheitsanzeige",
 	"menu_hophud_health_colors_desc" : "Färbt die Gesundheitsanzeige von Spielern gemäß deren Peer-Farbe",
 	"menu_hophud_kill_counter" : "Kill-Zähler",

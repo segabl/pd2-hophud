@@ -36,6 +36,7 @@ if not HopHUD then
 			combine_pops = false
 		},
 		display_invulnerability = true,
+		display_bulletstorm = true,
 		health_colors = true,
 		kill_counter = true,
 		main_menu_panel = true,

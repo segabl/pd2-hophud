@@ -90,6 +90,72 @@ function HUDTeammate:animate_invulnerability(duration)
 	end)
 end
 
+function HUDTeammate:_animate_bullet_storm(weapons_panel, duration)
+	if not weapons_panel then
+		return
+	end
+
+	local ammo_text = weapons_panel:child("ammo_clip")
+	local panel = weapons_panel:child("bulletstorm")
+	if not panel then
+		panel = weapons_panel:panel({
+			name = "bulletstorm",
+			w = ammo_text:w() * 2,
+			h = ammo_text:h() * 2
+		})
+		panel:set_world_center(ammo_text:world_center_x(), weapons_panel:world_center_y())
+
+		panel:bitmap({
+			name = "effect",
+			texture = "guis/textures/pd2/crimenet_marker_glow",
+			layer = 0,
+			alpha = 0,
+			w = panel:w(),
+			h = panel:h(),
+			color = tweak_data.screen_colors.button_stage_3
+		})
+
+		local text = panel:text({
+			layer = 1,
+			text = "8",
+			font = tweak_data.hud_players.ammo_font,
+			font_size = ammo_text:font_size() * 1.25,
+			rotation = 90
+		})
+		text:set_shape(text:text_rect())
+		text:set_center(panel:w() * 0.5, panel:h() * 0.5)
+	end
+
+	local effect = panel:child("effect")
+
+	weapons_panel:stop()
+	weapons_panel:animate(function ()
+		ammo_text:hide()
+		panel:show()
+
+		local t = 0
+		while t < duration do
+			t = t + coroutine.yield()
+
+			local a = math.map_range(math.sin(t * 360), -1, 1, 0, 1)
+			effect:set_alpha(a)
+		end
+
+		panel:hide()
+		ammo_text:show()
+	end)
+end
+
+function HUDTeammate:animate_bulletstorm(duration)
+	local weapons_panel = self._player_panel:child("weapons_panel")
+	if not weapons_panel then
+		return
+	end
+
+	self:_animate_bullet_storm(weapons_panel:child("primary_weapon_panel"), duration)
+	self:_animate_bullet_storm(weapons_panel:child("secondary_weapon_panel"), duration)
+end
+
 Hooks:PostHook(HUDTeammate, "set_state", "set_state_hophud", function (self, state)
 	local is_player = state == "player"
 
