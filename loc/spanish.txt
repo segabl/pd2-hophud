@@ -40,6 +40,8 @@
 	"menu_hophud_hq_fonts_desc" : "Usa fuentes de mayor calidad donde estén disponibles",
 	"menu_hophud_restore_callsigns" : "Restaurar indicadores",
 	"menu_hophud_restore_callsigns_desc" : "Restaura los círculos de colores junto a los nombres de los jugadores",
+	"menu_hophud_disable_down_counter" : "Disable down counter",
+	"menu_hophud_disable_down_counter_desc" : "Disables the down counter next to player names",
 	"menu_hophud_label_unit_type" : "Mostrar tipos de unidades",
 	"menu_hophud_label_unit_type_desc" : "Muestra el tipo de unidad en las etiquetas de nombre",
 	"hud_hophud_unit_type_team_ai" : "Bot",

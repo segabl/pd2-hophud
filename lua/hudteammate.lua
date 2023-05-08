@@ -5,6 +5,7 @@ Hooks:PostHook(HUDTeammate, "init", "init_hophud", function (self)
 	local bg_rect = { 84, 0, 44, 32 }
 
 	self._downs_icon = self._panel:bitmap({
+		visible = not HopHUD.settings.disable_down_counter,
 		name = "down_icon",
 		texture = "guis/textures/pd2/arrow_downcounter",
 		layer = 1,
@@ -13,6 +14,7 @@ Hooks:PostHook(HUDTeammate, "init", "init_hophud", function (self)
 	})
 
 	self._downs = self._panel:text({
+		visible = not HopHUD.settings.disable_down_counter,
 		name = "downs",
 		vertical = "center",
 		layer = 1,
@@ -24,6 +26,7 @@ Hooks:PostHook(HUDTeammate, "init", "init_hophud", function (self)
 	})
 
 	self._downs_bg = self._panel:bitmap({
+		visible = not HopHUD.settings.disable_down_counter,
 		name = "downs_bg",
 		layer = 0,
 		texture = "guis/textures/pd2/hud_tabs",
@@ -90,9 +93,9 @@ end
 Hooks:PostHook(HUDTeammate, "set_state", "set_state_hophud", function (self, state)
 	local is_player = state == "player"
 
-	self._downs_bg:set_visible(is_player)
-	self._downs_icon:set_visible(is_player)
-	self._downs:set_visible(is_player)
+	self._downs_bg:set_visible(is_player and not HopHUD.settings.disable_down_counter)
+	self._downs_icon:set_visible(is_player and not HopHUD.settings.disable_down_counter)
+	self._downs:set_visible(is_player and not HopHUD.settings.disable_down_counter)
 
 	if not self._main_player and not HopHUD.settings.restore_callsigns then
 		local name = self._panel:child("name")

@@ -40,6 +40,8 @@
 	"menu_hophud_hq_fonts_desc" : "Benutze HQ-Schriftarten wenn möglich",
 	"menu_hophud_restore_callsigns" : "Stelle Kennungen wieder her",
 	"menu_hophud_restore_callsigns_desc" : "Stellt die farbigen Kreise neben Spielernamen wieder her",
+	"menu_hophud_disable_down_counter" : "Deaktiviere Downs Anzeige",
+	"menu_hophud_disable_down_counter_desc" : "Deaktiviert die Anzeige der verbleibenden Downs neben Spielernamen",
 	"menu_hophud_label_unit_type" : "Zeige Einheitstyp an",
 	"menu_hophud_label_unit_type_desc" : "Zeigt den Einheitstyp auf Namensanzeigen an",
 	"hud_hophud_unit_type_team_ai" : "Bot",

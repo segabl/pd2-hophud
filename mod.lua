@@ -41,6 +41,7 @@ if not HopHUD then
 		main_menu_panel = true,
 		hq_fonts = false,
 		restore_callsigns = true,
+		disable_down_counter = false,
 		label_unit_type = true
 	}
 	HopHUD.params = {
