@@ -46,11 +46,17 @@ if not HopHUD then
 		label_unit_type = true
 	}
 	HopHUD.params = {
-		chat_sounds = { priority = 9 },
+		main_menu_panel = { priority = 10, divider = 16 },
+		chat_sounds = { priority = 9, divider = 16 },
 		bot_colors = { priority = 8 },
-		joker_colors = { priority = 7 },
+		joker_colors = { priority = 7, divider = 16 },
+		kill_counter = { priority = 6 },
+		health_colors = { priority = 5 },
+		restore_callsigns = { priority = 4 },
+		disable_down_counter = { priority = 3 },
+		display_invulnerability = { priority = 2 },
+		display_bulletstorm = { priority = 1, divider = 16 },
 		damage_pops = { divider = -16, priority = -1000 },
-		main_menu_panel = { priority = 10 },
 		local_player = { priority = 10 },
 		remote_player = { priority = 9 },
 		team_ai = { priority = 8 },
