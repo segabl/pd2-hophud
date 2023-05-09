@@ -46,6 +46,8 @@
 	"menu_hophud_disable_down_counter_desc" : "Deaktiviert die Anzeige der verbleibenden Downs neben Spielernamen",
 	"menu_hophud_uppercase_names" : "Namen in Großbuchstaben",
 	"menu_hophud_uppercase_names_desc" : "Zeigt Namen der Mitspieler in Großbuchstaben an",
+	"menu_hophud_smaller_name_labels" : "Kleinere Namensanzeige",
+	"menu_hophud_smaller_name_labels_desc" : "Reduziert die Schriftgröße der Namen die über Spielern angezeigt werden",
 	"menu_hophud_label_unit_type" : "Zeige Einheitstyp an",
 	"menu_hophud_label_unit_type_desc" : "Zeigt den Einheitstyp auf Namensanzeigen an",
 	"hud_hophud_unit_type_team_ai" : "Bot",
