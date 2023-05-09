@@ -44,6 +44,8 @@
 	"menu_hophud_restore_callsigns_desc" : "Восстанавливает цветные круги рядом с именами игроков.",
 	"menu_hophud_disable_down_counter" : "Disable down counter",
 	"menu_hophud_disable_down_counter_desc" : "Disables the down counter next to player names",
+	"menu_hophud_uppercase_names" : "Uppercase names",
+	"menu_hophud_uppercase_names_desc" : "Displays names on teammate panels and name labels in uppercase letters",
 	"menu_hophud_label_unit_type" : "Отображать типы полицейских",
 	"menu_hophud_label_unit_type_desc" : "Отображает тип полицейских на их именах.",
 	"hud_hophud_unit_type_team_ai" : "Бот",

@@ -43,6 +43,7 @@ if not HopHUD then
 		hq_fonts = false,
 		restore_callsigns = true,
 		disable_down_counter = false,
+		uppercase_names = false,
 		label_unit_type = true
 	}
 	HopHUD.params = {
@@ -201,6 +202,9 @@ if not HopHUD then
 	function HopHUD:set_name_panel_text(text, name, level, rank, color_id)
 		local rank_string, level_string = self:rank_and_level_string(rank, level)
 		local name_string = rank_string .. level_string .. " " .. tostring(name)
+		if HopHUD.settings.uppercase_names then
+			name_string = name_string:upper()
+		end
 		text:set_text(name_string)
 		text:set_range_color(0 + utf8.len(rank_string .. level_string), 0 + utf8.len(name_string), tweak_data.chat_colors[color_id] or Color.white)
 		text:set_range_color(0, 0 + utf8.len(rank_string), HopHUD.colors.rank)
@@ -208,6 +212,9 @@ if not HopHUD then
 	end
 
 	function HopHUD:set_teammate_name_panel(panel, name, color_id)
+		if HopHUD.settings.uppercase_names then
+			name = name:upper()
+		end
 		local teammate_panel = panel._panel
 		local name_panel = teammate_panel:child("name")
 		local right_panel = panel._kills_icon or panel._downs_icon or name_panel
