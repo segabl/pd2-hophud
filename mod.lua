@@ -44,6 +44,7 @@ if not HopHUD then
 		restore_callsigns = true,
 		disable_down_counter = false,
 		uppercase_names = false,
+		smaller_name_labels = true,
 		label_unit_type = true
 	}
 	HopHUD.params = {
@@ -332,7 +333,9 @@ if not HopHUD then
 end
 
 if tweak_data then
-	tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
+	if HopHUD.settings.smaller_name_labels then
+		tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
+	end
 
 	if HopHUD.settings.hq_fonts then
 		tweak_data.hud.small_font = tweak_data.hud.medium_font
