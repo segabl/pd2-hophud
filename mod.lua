@@ -233,7 +233,7 @@ if not HopHUD then
 
 		if color_id and tweak_data.chat_colors[color_id] then
 			panel:set_callsign(color_id)
-			name_panel:set_color(HopHUD.colors.default)
+			name_panel:set_color(HopHUD.settings.restore_callsigns and HopHUD.colors.default or tweak_data.chat_colors[color_id])
 		end
 
 		panel:_update_kill_panel()
