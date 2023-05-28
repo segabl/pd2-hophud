@@ -18,7 +18,8 @@ if not HopHUD then
 		default = Color.white,
 		rank = Color.white,
 		level = Color.white:with_alpha(0.8),
-		action = Color.white:with_alpha(0.8)
+		action = Color.white:with_alpha(0.8),
+		skull = Color.yellow
 	}
 	HopHUD.settings = {
 		bot_colors = true,

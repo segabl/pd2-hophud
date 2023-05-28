@@ -52,6 +52,7 @@ Hooks:PostHook(HUDTeammate, "init", "init_hophud", function (self)
 	self._kills_icon = self._panel:bitmap({
 		name = "skull",
 		texture = "guis/textures/pd2/kills_icon",
+		color = HopHUD.colors.skull,
 		layer = 1,
 		h = tweak_data.hud_players.name_size,
 		w = tweak_data.hud_players.name_size,
