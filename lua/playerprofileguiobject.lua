@@ -38,18 +38,20 @@ function PlayerProfileGuiObject:init(ws)
 	})
 
 	local large_avatar
-	Steam:friend_avatar(Steam.MEDIUM_AVATAR, Steam:userid(), function (texture)
-		if not large_avatar and alive(avatar_panel) then
-			avatar_panel:set_image(texture)
-		end
-	end)
+	if Steam then
+		Steam:friend_avatar(Steam.MEDIUM_AVATAR, Steam:userid(), function (texture)
+			if not large_avatar and alive(avatar_panel) then
+				avatar_panel:set_image(texture)
+			end
+		end)
 
-	Steam:friend_avatar(Steam.LARGE_AVATAR, Steam:userid(), function (texture)
-		if alive(avatar_panel) then
-			large_avatar = true
-			avatar_panel:set_image(texture)
-		end
-	end)
+		Steam:friend_avatar(Steam.LARGE_AVATAR, Steam:userid(), function (texture)
+			if alive(avatar_panel) then
+				large_avatar = true
+				avatar_panel:set_image(texture)
+			end
+		end)
+	end
 
 	local avatar_left = math.round(avatar_panel:right() + panel_padding)
 	local perk_icon_size = font_size * 3
