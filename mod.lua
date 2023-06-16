@@ -19,7 +19,13 @@ if not HopHUD then
 		rank = Color.white,
 		level = Color.white:with_alpha(0.8),
 		action = Color.white:with_alpha(0.8),
-		skull = Color.yellow
+		skull = Color.yellow,
+		in_payday = Color(0.75, 1, 0.5),
+		in_game = Color(0.75, 1, 0.5),
+		online = Color(0.5, 0.75, 1),
+		snooze = Color(0.35, 0.5, 0.75, 1),
+		away = Color(0.35, 0.5, 0.75, 1),
+		offline = Color(0.35, 1, 1, 1)
 	}
 	HopHUD.settings = {
 		bot_colors = true,

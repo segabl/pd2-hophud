@@ -1,12 +1,3 @@
-local colors = {
-	["in payday 2"] = Color(0.75, 1, 0.5),
-	["in game"] = Color(0.75, 1, 0.5),
-	["online"] = Color(0.5, 0.75, 1),
-	["snooze"] = Color(0.35, 0.5, 0.75, 1),
-	["away"] = Color(0.35, 0.5, 0.75, 1),
-	["offline"] = Color(0.35, 1, 1, 1)
-}
-
 Hooks:PostHook(SocialHubUserItem, "setup_panel", "setup_panel_effort", function (self)
 	local icon = self._content_panel:child(0)
 	if not icon then
@@ -25,22 +16,21 @@ Hooks:PostHook(SocialHubUserItem, "setup_panel", "setup_panel_effort", function 
 		return
 	end
 
-	self._state_text:set_color(colors[self.friend_data.state] or Color.white)
+	local loc_id = "menu_hophud_friend_state_" .. self.friend_data.state
+	self._state_text:set_text(managers.localization:exists(loc_id) and managers.localization:to_upper_text(loc_id) or utf8.to_upper(self.friend_data.state))
+	ExtendedPanel.make_fine_text(self._state_text)
+	self._state_text:set_right(self._right_side_panel:right() - self.type_config.margin)
+	self._state_text:set_color(HopHUD.colors[self.friend_data.state] or HopHUD.colors.default)
 end)
 
-function SocialHubUserItem:get_status_prio()
-	if self.friend_data.state == "offline" then
-		return 4
-	elseif self.friend_data.state == "away" then
-		return 3
-	elseif self.friend_data.state == "snooze" then
-		return 2
-	elseif self.friend_data.state == "online" then
-		return 1
-	elseif self.friend_data.state == "in game" then
-		return 0
-	elseif self.friend_data.state == "in payday 2" then
-		return -1
-	end
-	return 3
-end
+local priorities = {
+	offline = 5,
+	away = 4,
+	snooze = 3,
+	online = 1,
+	in_game = 0,
+	in_payday = -1
+}
+Hooks:OverrideFunction(SocialHubUserItem, "get_status_prio", function (self)
+	return priorities[self.friend_data.state] or 4
+end)
