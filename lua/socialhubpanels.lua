@@ -30,17 +30,17 @@ end)
 
 function SocialHubUserItem:get_status_prio()
 	if self.friend_data.state == "offline" then
-		return 6
-	elseif self.friend_data.state == "away" then
-		return 5
-	elseif self.friend_data.state == "snooze" then
 		return 4
-	elseif self.friend_data.state == "online" then
+	elseif self.friend_data.state == "away" then
 		return 3
-	elseif self.friend_data.state == "in game" then
+	elseif self.friend_data.state == "snooze" then
 		return 2
-	elseif self.friend_data.state == "in payday 2" then
+	elseif self.friend_data.state == "online" then
 		return 1
+	elseif self.friend_data.state == "in game" then
+		return 0
+	elseif self.friend_data.state == "in payday 2" then
+		return -1
 	end
-	return 5
+	return 3
 end
