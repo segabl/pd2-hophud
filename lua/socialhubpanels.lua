@@ -1,10 +1,10 @@
 Hooks:PostHook(SocialHubUserItem, "setup_panel", "setup_panel_effort", function (self)
-	local icon = self._content_panel:child(0)
-	if not icon then
+	if not self.friend_data then
 		return
 	end
 
-	if Steam and self.friend_data.platform == Idstring("STEAM") then
+	local icon = self._content_panel:child(0)
+	if icon and Steam and self.friend_data.platform == Idstring("STEAM") then
 		Steam:friend_avatar(Steam.SMALL_AVATAR, self.friend_data.id, function (texture)
 			if alive(icon) then
 				icon:set_image(texture)
@@ -12,7 +12,7 @@ Hooks:PostHook(SocialHubUserItem, "setup_panel", "setup_panel_effort", function 
 		end)
 	end
 
-	if not self._state_text then
+	if not self._state_text or not self.friend_data.state then
 		return
 	end
 
