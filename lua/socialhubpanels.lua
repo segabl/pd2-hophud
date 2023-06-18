@@ -27,9 +27,9 @@ local priorities = {
 	offline = 5,
 	away = 4,
 	snooze = 3,
-	online = 1,
-	in_game = 0,
-	in_payday = -1
+	in_game = 2,
+	online = 2,
+	in_payday = 1
 }
 Hooks:OverrideFunction(SocialHubUserItem, "get_status_prio", function (self)
 	return priorities[self.friend_data.state] or 4
