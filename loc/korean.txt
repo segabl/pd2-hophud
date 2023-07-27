@@ -44,6 +44,8 @@
 	"menu_hophud_restore_callsigns_desc" : "플레이어 이름 옆의 색상 원을 복원합니다.",
 	"menu_hophud_disable_down_counter" : "다운 카운터 비활성화",
 	"menu_hophud_disable_down_counter_desc" : "플레이어 이름 옆에 있는 다운 카운터를 비활성화합니다.",
+	"menu_hophud_alternative_rank_style" : "Alternative rank style",
+	"menu_hophud_alternative_rank_style_desc" : "Uses a different style to display infamy and levels next to player names",
 	"menu_hophud_uppercase_names" : "대문자 이름",
 	"menu_hophud_uppercase_names_desc" : "팀원 패널과 이름 레이블을 대문자로 이름을 표시합니다.",
 	"menu_hophud_smaller_name_labels" : "작은 이름 라벨",

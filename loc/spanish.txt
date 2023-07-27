@@ -44,6 +44,8 @@
 	"menu_hophud_restore_callsigns_desc" : "Restaura los círculos de colores junto a los nombres de los jugadores",
 	"menu_hophud_disable_down_counter" : "Ocultar contrador de bajas",
 	"menu_hophud_disable_down_counter_desc" : "Oculta el contador de bajas junto al nombre de los jugadores",
+	"menu_hophud_alternative_rank_style" : "Alternative rank style",
+	"menu_hophud_alternative_rank_style_desc" : "Uses a different style to display infamy and levels next to player names",
 	"menu_hophud_uppercase_names" : "Nombres en mayúsculas",
 	"menu_hophud_uppercase_names_desc" : "Muestra los nombres de los jugadores en mayúsculas",
 	"menu_hophud_smaller_name_labels" : "Etiquetas de nombres mas pequeñas",

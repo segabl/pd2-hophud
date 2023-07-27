@@ -44,6 +44,8 @@
 	"menu_hophud_restore_callsigns_desc" : "显示玩家名字旁用以指代玩家次序的颜色小圆圈",
 	"menu_hophud_disable_down_counter" : "取消倒地计数器",
 	"menu_hophud_disable_down_counter_desc" : "不显示玩家名字旁的倒地计数器",
+	"menu_hophud_alternative_rank_style" : "Alternative rank style",
+	"menu_hophud_alternative_rank_style_desc" : "Uses a different style to display infamy and levels next to player names",
 	"menu_hophud_uppercase_names" : "大写名字",
 	"menu_hophud_uppercase_names_desc" : "队友面板和名字标签的英文会被改为大写",
 	"menu_hophud_smaller_name_labels" : "更小的名字标签",

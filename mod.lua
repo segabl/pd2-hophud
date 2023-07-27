@@ -50,6 +50,7 @@ if not HopHUD then
 		hq_fonts = false,
 		restore_callsigns = true,
 		disable_down_counter = false,
+		alternative_rank_style = true,
 		uppercase_names = false,
 		smaller_name_labels = true,
 		label_unit_type = true
@@ -201,22 +202,47 @@ if not HopHUD then
 		self._update_t = t
 	end
 
-	function HopHUD:rank_and_level_string(rank, level)
-		local rank_string = rank and rank > 0 and (managers.experience:rank_string(rank) .. "Ї") or ""
-		local level_string = level and tostring(level) or ""
-		return rank_string, level_string
+	function HopHUD:get_name_string_and_colors(name, level, rank)
+		level = level or 0
+		rank = rank or 0
+
+		local rank_level_string, name_string, color_ranges
+		if self.settings.alternative_rank_style then
+			local rank_string = type(rank) == "number" and rank > 0 and (managers.experience:rank_string(rank) .. "Ї") or ""
+			local level_string = level and tostring(level) or ""
+			rank_level_string = rank_string .. level_string
+			name_string = rank_level_string .. " " .. tostring(name)
+			color_ranges = {
+				{
+					start = 0,
+					stop = utf8.len(rank_string),
+					color = HopHUD.colors.rank
+				},
+				{
+					start = utf8.len(rank_string),
+					stop = utf8.len(rank_level_string),
+					color = HopHUD.colors.level
+				},
+			}
+		else
+			rank_level_string, color_ranges = managers.experience:gui_string(level, type(rank) ~= "number" and 0 or rank, utf8.len(tostring(name)) + 2)
+			name_string = name .. " ("  .. rank_level_string .. ")"
+		end
+
+		if self.settings.uppercase_names then
+			name_string = name_string:upper()
+		end
+
+		return name_string, color_ranges or {}
 	end
 
 	function HopHUD:set_name_panel_text(text, name, level, rank, color_id)
-		local rank_string, level_string = self:rank_and_level_string(rank, level)
-		local name_string = rank_string .. level_string .. " " .. tostring(name)
-		if HopHUD.settings.uppercase_names then
-			name_string = name_string:upper()
-		end
+		local name_string, colors = self:get_name_string_and_colors(name, level, rank)
 		text:set_text(name_string)
-		text:set_range_color(0 + utf8.len(rank_string .. level_string), 0 + utf8.len(name_string), tweak_data.chat_colors[color_id] or Color.white)
-		text:set_range_color(0, 0 + utf8.len(rank_string), HopHUD.colors.rank)
-		text:set_range_color(0 + utf8.len(rank_string), 0 + utf8.len(rank_string .. level_string), HopHUD.colors.level)
+		text:set_color(tweak_data.chat_colors[color_id] or self.colors.default)
+		for _, c in pairs(colors) do
+			text:set_range_color(c.start, c.stop, c.color)
+		end
 	end
 
 	function HopHUD:set_teammate_name_panel(panel, name, color_id)
