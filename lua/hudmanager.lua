@@ -43,27 +43,35 @@ function HUDManager:update_vehicle_label_by_id(label_id)
 		for _, v in pairs(vehicle_ext._seats) do
 			local name, level, rank, color_id = HopHUD:information_by_unit(v.occupant)
 			if name then
-				local rank_string, level_string = HopHUD:rank_and_level_string(rank, level)
-				local name_string = rank_string .. level_string .. " " .. name
-				local prev_len = utf8.len(occupants_text)
-				occupants_text = occupants_text .. name_string .. "\n"
-				if tweak_data.chat_colors[color_id] then
-					table.insert(color_ranges, { prev_len + utf8.len(rank_string .. level_string), prev_len + utf8.len(name_string), tweak_data.chat_colors[color_id] })
+				if occupants_text ~= "" then
+					occupants_text = occupants_text .. ", "
 				end
-				table.insert(color_ranges, { prev_len, prev_len + utf8.len(rank_string), HopHUD.colors.rank })
-				table.insert(color_ranges, { prev_len + utf8.len(rank_string), prev_len + utf8.len(rank_string .. level_string), HopHUD.colors.level })
+
+				local prev_len = utf8.len(occupants_text)
+				occupants_text = occupants_text .. name
+
+				table.insert(color_ranges, {
+					start = prev_len,
+					stop = utf8.len(occupants_text),
+					color = tweak_data.chat_colors[color_id] or HopHUD.colors.default
+				})
 			end
 		end
 	end
+
+	if HopHUD.settings.uppercase_names then
+		occupants_text = occupants_text:upper()
+	end
+
 	local action = label.panel:child("action")
 	action:set_visible(occupants_text ~= "")
 	action:set_text(occupants_text)
 	action:set_color(HopHUD.colors.default)
-	for _, v in ipairs(color_ranges) do
-		action:set_range_color(unpack(v))
+	for _, c in pairs(color_ranges) do
+		action:set_range_color(c.start, c.stop, c.color)
 	end
-	self:align_teammate_name_label(label.panel, label.interact)
 
+	self:align_teammate_name_label(label.panel, label.interact)
 end
 
 Hooks:PostHook(HUDManager, "_update_name_labels", "_update_name_labels_hophud", function (self)
