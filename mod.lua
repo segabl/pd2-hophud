@@ -202,9 +202,6 @@ if not HopHUD then
 	end
 
 	function HopHUD:get_name_string_and_colors(name, level, rank)
-		level = level or 0
-		rank = rank or 0
-
 		local rank_level_string, name_string, color_ranges
 		if self.settings.alternative_rank_style then
 			local rank_string = type(rank) == "number" and rank > 0 and (managers.experience:rank_string(rank) .. "Ї") or ""
@@ -224,7 +221,7 @@ if not HopHUD then
 				},
 			}
 		else
-			rank_level_string, color_ranges = managers.experience:gui_string(level, type(rank) ~= "number" and 0 or rank, utf8.len(tostring(name)) + 2)
+			rank_level_string, color_ranges = managers.experience:gui_string(level or 0, type(rank) ~= "number" and 0 or rank, utf8.len(tostring(name)) + 2)
 			name_string = name .. " ("  .. rank_level_string .. ")"
 		end
 
