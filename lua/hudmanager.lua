@@ -26,10 +26,6 @@ Hooks:PostHook(HUDManager, "reset_player_hpbar", "reset_player_hpbar_hophud", fu
 	HopHUD:set_teammate_name_panel(self._teammate_panels[HUDManager.PLAYER_PANEL], name, color_id)
 end)
 
-Hooks:PostHook(HUDManager, "update", "update_hophud", function (self, ...)
-	HopHUD:update(...)
-end)
-
 function HUDManager:update_vehicle_label_by_id(label_id)
 	local label = self:_get_name_label(label_id)
 	if not label then

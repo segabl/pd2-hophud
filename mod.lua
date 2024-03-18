@@ -12,8 +12,6 @@ if not HopHUD then
 
 	_G.HopHUD = {}
 	HopHUD.mod_path = ModPath
-	HopHUD.damage_pops = {}
-	HopHUD.damage_pop_key = 1
 	HopHUD.colors = {
 		default = Color.white,
 		rank = Color.white,
@@ -81,13 +79,9 @@ if not HopHUD then
 	HopHUD.DamagePop = DamagePop
 
 	function DamagePop:init(position, damage, is_kill, is_special, color)
-		self._panel = HopHUD._panel:panel({
-			name = "panel",
-			visible = false
-		})
+		self._panel = HopHUD._panel:panel()
 		local damage_text = string.format(damage < 1 and "%1.1f" or "%u", damage) .. (is_kill and "" or "")
 		local text = self._panel:text({
-			name = "text",
 			text = damage_text,
 			font = tweak_data.menu.pd2_medium_font,
 			font_size = tweak_data.hud.name_label_font_size,
@@ -102,33 +96,33 @@ if not HopHUD then
 
 		self._damage = damage
 		self._position = position
-		self._created_t = HopHUD._t
-		self._lifetime = 1
+		self._created_t = TimerManager:game():time()
+
+		self._panel:animate(callback(self, self, "animate"))
 	end
 
-	local screen_pos = Vector3()
-	local world_pos = Vector3()
-	function DamagePop:update(t, cam, cam_forward)
-		local f = (t - self._created_t) / self._lifetime
-		if f > 1 then
-			if not self.dead then
+	function DamagePop:animate()
+		over(1, function (p)
+			local cam = managers.viewport:get_current_camera()
+			if not cam then
 				self:destroy()
+				return
 			end
-			return
-		end
-		mvector3.set(world_pos, self._position)
-		mvector3.set(screen_pos, HopHUD._ws:world_to_screen(cam, world_pos))
-		mvector3.subtract(world_pos, cam:position())
-		mvector3.normalize(world_pos)
-		local _f = math.min(f * 1.5, 1)
-		self._panel:set_center(screen_pos.x, screen_pos.y - 2 * self._panel:h() * (math.pow(_f - 1, 3) + 1))
-		self._panel:set_alpha(1.5 * (1 - f))
-		self._panel:set_visible(mvector3.dot(cam_forward, world_pos) >= 0)
+
+			local screen_pos = HopHUD._ws:world_to_screen(cam, self._position)
+			local _f = math.min(p * 1.5, 1)
+			self._panel:set_center(screen_pos.x, screen_pos.y - 3 * self._panel:h() * (math.pow(_f - 1, 3) + 1))
+			self._panel:set_alpha(1.5 * (1 - p))
+			self._panel:set_visible(screen_pos.z >= 0)
+		end)
+
+		self:destroy()
 	end
 
 	function DamagePop:destroy()
-		HopHUD._panel:remove(self._panel)
-		self.dead = true
+		if alive(self._panel) then
+			self._panel:parent():remove(self._panel)
+		end
 	end
 
 	function HopHUD:add_damage_pop(unit, damage_info)
@@ -158,18 +152,13 @@ if not HopHUD then
 		local add_dmg = 0
 		if self.settings.damage_pops.combine_pops then
 			local last_dmg_pop = unit_dmg._last_dmg_pop and unit_dmg._last_dmg_pop[attacker_info:key()]
-			if last_dmg_pop and not last_dmg_pop.dead and last_dmg_pop._created_t + 0.05 > self._t then
+			if last_dmg_pop and last_dmg_pop._created_t + 0.05 > TimerManager:game():time() then
 				add_dmg = last_dmg_pop._damage
 				last_dmg_pop:destroy()
 			end
 		end
 
 		local pop = DamagePop:new(pos, damage_info.damage * 10 + add_dmg, unit_dmg._dead, info:is_special() or info:is_boss(), color)
-		if self.damage_pops[self.damage_pop_key] then
-			self.damage_pops[self.damage_pop_key]:destroy()
-		end
-		self.damage_pops[self.damage_pop_key] = pop
-		self.damage_pop_key = (self.damage_pop_key < 1000 and self.damage_pop_key or 0) + 1
 
 		unit_dmg._last_dmg_pop = unit_dmg._last_dmg_pop or {}
 		unit_dmg._last_dmg_pop[attacker_info:key()] = pop
@@ -178,27 +167,6 @@ if not HopHUD then
 	function HopHUD:init()
 		self._ws = managers.hud._workspace
 		self._panel = self._panel or managers.hud:panel(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2) or self._ws:panel({ name = "HopHUD" })
-	end
-
-	local cam_forward = Vector3()
-	function HopHUD:update(t, dt)
-		self._t = t
-		if self._update_t and t < self._update_t + 0.03 then
-			return
-		end
-		local cam = managers.viewport:get_current_camera()
-		if not cam then
-			return
-		end
-		mrotation.y(cam:rotation(), cam_forward)
-		for k, pop in pairs(self.damage_pops) do
-			if pop.dead then
-				self.damage_pops[k] = nil
-			else
-				pop:update(t, cam, cam_forward)
-			end
-		end
-		self._update_t = t
 	end
 
 	function HopHUD:get_name_string_and_colors(name, level, rank)
