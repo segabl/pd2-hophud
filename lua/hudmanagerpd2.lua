@@ -28,24 +28,27 @@ function HUDManager:align_teammate_name_label(panel, interact)
 	local data = self._add_label_data
 	if not data then
 		local id = panel:name():gsub("name_panel", "")
-		local data = self:_get_name_label(tonumber(id))
+		data = self:_get_name_label(tonumber(id))
 		if not data then
 			return
 		end
 	end
-	local name, level, rank, color_id
-	if data.vehicle then
-		name, level = data.character_name, HopHUD.settings.label_unit_type and managers.localization:text("hud_hophud_unit_type_vehicle")
-	else
-		name, level, rank, color_id = HopHUD:information_by_unit(data.movement._unit)
-	end
-	local color = tweak_data.chat_colors[color_id] or Color.white
 
 	local text = panel:child("text")
 	local action = panel:child("action")
 	local bag = panel:child("bag")
 	local bag_number = panel:child("bag_number")
 	local infamy = panel:child("infamy")
+
+	local name, level, rank, color_id
+	if data.vehicle then
+		name, level = data.character_name, HopHUD.settings.label_unit_type and managers.localization:text("hud_hophud_unit_type_vehicle")
+	elseif data.movement then
+		name, level, rank, color_id = HopHUD:information_by_unit(data.movement._unit)
+	else
+		name = text:text()
+	end
+	local color = tweak_data.chat_colors[color_id] or HopHUD.colors.default
 
 	panel:child("cheater"):set_size(0, 0)
 
