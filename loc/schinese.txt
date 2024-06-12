@@ -60,6 +60,7 @@
 	"menu_hophud_friend_state_offline" : "离线",
 	"hud_hophud_unit_type_team_ai" : "bot",
 	"hud_hophud_unit_type_joker" : "小弟",
+	"hud_hophud_unit_type_npc" : "小弟",
 	"hud_hophud_unit_type_vehicle" : "载具",
 	"hud_action_adding_saw_blade" : "添加电锯锯片",
 	"hud_action_applying_tape" : "使用磁带",

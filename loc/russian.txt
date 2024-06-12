@@ -60,6 +60,7 @@
 	"menu_hophud_friend_state_offline" : "Offline",
 	"hud_hophud_unit_type_team_ai" : "Бот",
 	"hud_hophud_unit_type_joker" : "Мой Джокер",
+	"hud_hophud_unit_type_npc" : "Мой Джокер",
 	"hud_hophud_unit_type_vehicle" : "Транспорт",
 	"hud_action_adding_saw_blade" : "Забирает пилу",
 	"hud_action_applying_tape" : "Применяет ленту",
