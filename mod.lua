@@ -32,6 +32,7 @@ if not HopHUD then
 		civilian_icons = true,
 		custom_timer = true,
 		damage_pops = {
+			damage_pops_style = 1,
 			local_player = true,
 			remote_player = true,
 			team_ai = true,
@@ -65,6 +66,7 @@ if not HopHUD then
 		display_invulnerability = { priority = 2 },
 		display_bulletstorm = { priority = 1, divider = 16 },
 		damage_pops = { divider = -16, priority = -1000 },
+		damage_pops_style = { priority = 11, divider = 16, items = { "menu_hophud_damage_pops_classic", "menu_hophud_damage_pops_burst" } },
 		local_player = { priority = 10 },
 		remote_player = { priority = 9 },
 		team_ai = { priority = 8 },
@@ -79,7 +81,9 @@ if not HopHUD then
 	HopHUD.DamagePop = DamagePop
 
 	function DamagePop:init(position, damage, is_kill, is_special, color)
-		self._panel = HopHUD._panel:panel()
+		self._panel = HopHUD._panel:panel({
+			visible = false
+		})
 		local damage_text = string.format(damage < 1 and "%1.1f" or "%u", damage) .. (is_kill and "" or "")
 		local text = self._panel:text({
 			text = damage_text,
@@ -98,11 +102,24 @@ if not HopHUD then
 		self._position = position
 		self._created_t = TimerManager:game():time()
 
+		self._offset = Vector3()
+		if HopHUD.settings.damage_pops.damage_pops_style == 2 then
+			self._direction = Vector3(math.rand(-1, 1), -2)
+			mvector3.set_length(self._direction, math.rand(200, 300))
+		else
+			self._direction = Vector3(0, -3 * self._panel:h())
+		end
+
 		self._panel:animate(callback(self, self, "animate"))
 	end
 
 	function DamagePop:animate()
-		over(1, function (p)
+		local t = 1
+		while t > 0 do
+			local p = 1 - t
+			local dt = coroutine.yield()
+			t = t - dt
+
 			local cam = managers.viewport:get_current_camera()
 			if not cam then
 				self:destroy()
@@ -110,11 +127,19 @@ if not HopHUD then
 			end
 
 			local screen_pos = HopHUD._ws:world_to_screen(cam, self._position)
-			local _f = math.min(p * 1.5, 1)
-			self._panel:set_center(screen_pos.x, screen_pos.y - 3 * self._panel:h() * (math.pow(_f - 1, 3) + 1))
+
+			if HopHUD.settings.damage_pops.damage_pops_style == 2 then
+				mvector3.add_scaled(self._offset, self._direction, dt / math.max(1, screen_pos.z / 100))
+				mvector3.add_scaled(self._direction, math.Y, dt * 800)
+			else
+				mvector3.set(self._offset, self._direction)
+				mvector3.multiply(self._offset, math.pow(math.min(p * 1.5, 1) - 1, 3) + 1)
+			end
+
+			self._panel:set_center(screen_pos.x + self._offset.x, screen_pos.y + self._offset.y)
 			self._panel:set_alpha(1.5 * (1 - p))
 			self._panel:set_visible(screen_pos.z >= 0)
-		end)
+		end
 
 		self:destroy()
 	end
