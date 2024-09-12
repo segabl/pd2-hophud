@@ -46,6 +46,8 @@ if not HopHUD then
 		health_colors = true,
 		kill_counter = true,
 		main_menu_panel = true,
+		hide_content_updates = false,
+		hide_news_feed = false,
 		hq_fonts = false,
 		restore_callsigns = true,
 		disable_down_counter = false,
@@ -55,25 +57,27 @@ if not HopHUD then
 		label_unit_type = true
 	}
 	HopHUD.params = {
-		main_menu_panel = { priority = 10, divider = 16 },
-		chat_sounds = { priority = 9, divider = 16 },
+		main_menu_panel = { priority = 12 },
+		hide_content_updates = { priority = 11 },
+		hide_news_feed = { priority = 10, divider = 12 },
+		chat_sounds = { priority = 9, divider = 12 },
 		bot_colors = { priority = 8 },
-		joker_colors = { priority = 7, divider = 16 },
+		joker_colors = { priority = 7, divider = 12 },
 		kill_counter = { priority = 6 },
 		health_colors = { priority = 5 },
 		restore_callsigns = { priority = 4 },
 		disable_down_counter = { priority = 3 },
 		display_invulnerability = { priority = 2 },
-		display_bulletstorm = { priority = 1, divider = 16 },
-		damage_pops = { divider = -16, priority = -1000 },
-		damage_pops_style = { priority = 11, divider = 16, items = { "menu_hophud_damage_pops_classic", "menu_hophud_damage_pops_burst" } },
+		display_bulletstorm = { priority = 1, divider = 12 },
+		damage_pops = { divider = -12, priority = -1000 },
+		damage_pops_style = { priority = 11, divider = 12, items = { "menu_hophud_damage_pops_classic", "menu_hophud_damage_pops_burst" } },
 		local_player = { priority = 10 },
 		remote_player = { priority = 9 },
 		team_ai = { priority = 8 },
 		joker = { priority = 7 },
 		sentry = { priority = 6 },
 		npc = { priority = 5 },
-		combine_pops = { divider = -16, priority = -1000 }
+		combine_pops = { divider = -12, priority = -1000 }
 	}
 	HopHUD.menu_builder = MenuBuilder:new("hophud", HopHUD.settings, HopHUD.params)
 

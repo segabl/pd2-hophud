@@ -30,6 +30,8 @@
 		{ "hook_id" : "lib/managers/hud/hudplayerdowned", "script_path" : "mod.lua" },
 		{ "hook_id" : "lib/managers/menu/contractboxgui", "script_path" : "mod.lua" },
 		{ "hook_id" : "lib/managers/menu/lobbycharacterdata", "script_path" : "mod.lua" },
+		{ "hook_id" : "lib/managers/menu/menucomponentmanager", "script_path" : "mod.lua" },
+		{ "hook_id" : "lib/managers/menu/newheistsgui", "script_path" : "mod.lua" },
 		{ "hook_id" : "lib/managers/menu/playerprofileguiobject", "script_path" : "mod.lua" },
 		{ "hook_id" : "lib/tweak_data/interactiontweakdata", "script_path" : "mod.lua" },
 		{ "hook_id" : "lib/units/beings/player/playermovement", "script_path" : "mod.lua" },
