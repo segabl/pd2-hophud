@@ -230,6 +230,9 @@ if not HopHUD then
 	end
 
 	function HopHUD:set_name_panel_text(text, name, level, rank, color_id)
+		if not name then -- Sanity check for vhud+
+			return
+		end
 		local name_string, colors = self:get_name_string_and_colors(name, level, rank)
 		text:set_text(name_string)
 		text:set_color(tweak_data.chat_colors[color_id] or self.colors.default)
