@@ -42,7 +42,7 @@ function HUDManager:align_teammate_name_label(panel, interact)
 
 	local name, level, rank, color_id
 	if data.vehicle then
-		name, level = data.character_name, HopHUD.settings.label_unit_type and managers.localization:text("hud_hophud_unit_type_vehicle")
+		name, level = data.character_name, HopHUD.settings.name_labels.label_unit_type and managers.localization:text("hud_hophud_unit_type_vehicle")
 	elseif data.movement then
 		name, level, rank, color_id = HopHUD:information_by_unit(data.movement._unit)
 	else
@@ -66,7 +66,7 @@ function HUDManager:align_teammate_name_label(panel, interact)
 	end
 
 	local empty = text:text() == ""
-	HopHUD:set_name_panel_text(text, name, level, rank, color_id)
+	HopHUD:set_name_panel_text(text, name, level, rank, color_id, HopHUD.settings.name_labels.disable_rank)
 	local _, _, tw, th = text:text_rect()
 	text:set_size(tw, th)
 	if empty then

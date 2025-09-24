@@ -51,10 +51,13 @@ if not HopHUD then
 		hq_fonts = false,
 		restore_callsigns = true,
 		disable_down_counter = false,
-		alternative_rank_style = true,
-		uppercase_names = false,
-		smaller_name_labels = true,
-		label_unit_type = true
+		name_labels = {
+			alternative_rank_style = true,
+			disable_rank = false,
+			uppercase_names = false,
+			smaller_name_labels = true,
+			label_unit_type = true
+		}
 	}
 	HopHUD.params = {
 		main_menu_panel = { priority = 12 },
@@ -69,8 +72,9 @@ if not HopHUD then
 		disable_down_counter = { priority = 3 },
 		display_invulnerability = { priority = 2 },
 		display_bulletstorm = { priority = 1, divider = 12 },
-		damage_pops = { divider = -12, priority = -1000 },
-		damage_pops_style = { priority = 11, divider = 12, items = { "menu_hophud_damage_pops_classic", "menu_hophud_damage_pops_burst" } },
+		name_labels = { divider = -12, priority = -999 },
+		damage_pops = { priority = -1000 },
+		damage_pops_style = { priority = 11, divider = 8, items = { "menu_hophud_damage_pops_classic", "menu_hophud_damage_pops_burst" } },
 		local_player = { priority = 10 },
 		remote_player = { priority = 9 },
 		team_ai = { priority = 8 },
@@ -198,9 +202,9 @@ if not HopHUD then
 		self._panel = self._panel or managers.hud:panel(PlayerBase.PLAYER_INFO_HUD_FULLSCREEN_PD2) or self._ws:panel({ name = "HopHUD" })
 	end
 
-	function HopHUD:get_name_string_and_colors(name, level, rank)
+	function HopHUD:get_name_string_and_colors(name, level, rank, disable_rank)
 		local rank_level_string, name_string, color_ranges
-		if self.settings.alternative_rank_style then
+		if self.settings.name_labels.alternative_rank_style and not disable_rank then
 			local rank_string = type(rank) == "number" and rank > 0 and (managers.experience:rank_string(rank) .. "Ї") or ""
 			local level_string = level and tostring(level) or ""
 			rank_level_string = rank_string .. level_string
@@ -217,23 +221,25 @@ if not HopHUD then
 					color = HopHUD.colors.level
 				},
 			}
+		elseif disable_rank then
+			name_string = name
 		else
 			rank_level_string, color_ranges = managers.experience:gui_string(level or 0, type(rank) ~= "number" and 0 or rank, utf8.len(tostring(name)) + 2)
 			name_string = name .. " ("  .. rank_level_string .. ")"
 		end
 
-		if self.settings.uppercase_names then
+		if self.settings.name_labels.uppercase_names then
 			name_string = name_string:upper()
 		end
 
 		return name_string, color_ranges or {}
 	end
 
-	function HopHUD:set_name_panel_text(text, name, level, rank, color_id)
+	function HopHUD:set_name_panel_text(text, name, level, rank, color_id, disable_rank)
 		if not name then -- Sanity check for vhud+
 			return
 		end
-		local name_string, colors = self:get_name_string_and_colors(name, level, rank)
+		local name_string, colors = self:get_name_string_and_colors(name, level, rank, disable_rank)
 		text:set_text(name_string)
 		text:set_color(tweak_data.chat_colors[color_id] or self.colors.default)
 		for _, c in pairs(colors) do
@@ -242,7 +248,7 @@ if not HopHUD then
 	end
 
 	function HopHUD:set_teammate_name_panel(panel, name, color_id)
-		if HopHUD.settings.uppercase_names then
+		if HopHUD.settings.name_labels.uppercase_names then
 			name = name:upper()
 		end
 		local teammate_panel = panel._panel
@@ -309,7 +315,7 @@ if not HopHUD then
 		if not info then
 			return
 		end
-		local level = info:level() or self.settings.label_unit_type and managers.localization:text("hud_hophud_unit_type_" .. info:type())
+		local level = info:level() or self.settings.name_labels.label_unit_type and managers.localization:text("hud_hophud_unit_type_" .. info:type())
 		return info:nickname(), level, info:rank(), info:color_id()
 	end
 
@@ -362,8 +368,8 @@ if not HopHUD then
 end
 
 if tweak_data then
-	if HopHUD.settings.smaller_name_labels then
-		tweak_data.hud.name_label_font_size = tweak_data.hud_players.name_size
+	if HopHUD.settings.name_labels.smaller_name_labels then
+		tweak_data.hud.name_label_font_size = tweak_data.hud.small_name_label_font_size
 	end
 
 	if HopHUD.settings.hq_fonts then

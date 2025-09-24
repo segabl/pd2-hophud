@@ -15,7 +15,7 @@ function HUDManager:update_name_label_by_peer(peer)
 	for _, data in pairs(self._hud.name_labels) do
 		if data.peer_id == peer:id() then
 			local name, level, rank, color_id = HopHUD:information_by_peer(peer)
-			HopHUD:set_name_panel_text(data.text, name, level, rank, color_id)
+			HopHUD:set_name_panel_text(data.text, name, level, rank, color_id, HopHUD.settings.name_labels.disable_rank)
 			self:align_teammate_name_label(data.panel, data.interact)
 		end
 	end
