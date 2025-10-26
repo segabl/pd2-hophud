@@ -1,0 +1,1 @@
+NewsFeedGui.BOTTOM_OFFSET = 20

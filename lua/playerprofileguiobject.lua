@@ -2,6 +2,8 @@ if not HopHUD.settings.main_menu_panel then
 	return
 end
 
+PlayerProfileGuiObject.BOTTOM_OFFSET = HopHUD.settings.hide_news_feed and 40 or 80
+
 function PlayerProfileGuiObject:init(ws)
 	local panel = ws:panel():panel()
 	local panel_width = 342
@@ -204,7 +206,7 @@ function PlayerProfileGuiObject:init(ws)
 	self._panel = panel
 
 	self._panel:set_size(panel_width, math.max(unspent_text and unspent_text:bottom() + panel_padding or continental_text:bottom() + panel_padding, avatar_panel:bottom() + panel_padding))
-	self._panel:set_bottom(self._panel:parent():h() - 60)
+	self._panel:set_bottom(self._panel:parent():h() - self.BOTTOM_OFFSET)
 	BoxGuiObject:new(self._panel, {sides = { 1, 1, 1, 1 }})
 
 	if skill_glow then

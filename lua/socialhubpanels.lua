@@ -1,11 +1,11 @@
-Hooks:PostHook(SocialHubUserItem, "setup_panel", "setup_panel_effort", function (self)
+Hooks:PostHook(SocialHubUserItem, "setup_panel", "setup_panel_effort", function(self)
 	if not self.friend_data then
 		return
 	end
 
 	local icon = self._content_panel:child(0)
 	if icon and Steam and self.friend_data.platform == Idstring("STEAM") then
-		Steam:friend_avatar(Steam.SMALL_AVATAR, self.friend_data.account_id or self.friend_data.id, function (texture)
+		Steam:friend_avatar(Steam.SMALL_AVATAR, self.friend_data.account_id or self.friend_data.id, function(texture)
 			if alive(icon) then
 				icon:set_image(texture)
 			end
@@ -24,13 +24,13 @@ Hooks:PostHook(SocialHubUserItem, "setup_panel", "setup_panel_effort", function 
 end)
 
 local priorities = {
-	offline = 5,
-	away = 4,
-	snooze = 3,
-	in_game = 2,
+	offline = 6,
+	away = 5,
+	snooze = 4,
+	in_game = 3,
 	online = 2,
 	in_payday = 1
 }
-Hooks:OverrideFunction(SocialHubUserItem, "get_status_prio", function (self)
+Hooks:OverrideFunction(SocialHubUserItem, "get_status_prio", function(self)
 	return priorities[self.friend_data.state] or 4
 end)

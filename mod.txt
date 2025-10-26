@@ -17,6 +17,7 @@
 		{ "hook_id" : "lib/managers/criminalsmanager", "script_path" : "mod.lua" },
 		{ "hook_id" : "lib/managers/group_ai_states/groupaistatebase", "script_path" : "mod.lua" },
 		{ "hook_id" : "lib/managers/hud/hudteammate", "script_path" : "mod.lua" },
+		{ "hook_id" : "lib/managers/menu/newsfeedgui", "script_path" : "mod.lua" },
 		{ "hook_id" : "lib/managers/social_hub/socialhubmanager", "script_path" : "mod.lua"},
 		{ "hook_id" : "lib/managers/social_hub/socialhubpanels", "script_path" : "mod.lua"},
 		{ "hook_id" : "lib/managers/hudmanager", "script_path" : "mod.lua" },

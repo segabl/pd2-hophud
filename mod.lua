@@ -20,7 +20,7 @@ if not HopHUD then
 		skull = Color.yellow,
 		in_payday = Color(0.75, 1, 0.5),
 		online = Color(0.5, 0.75, 1),
-		in_game = Color(0.5, 0.75, 1),
+		in_game = Color(0.75, 0.5, 0.75, 1),
 		snooze = Color(0.35, 0.5, 0.75, 1),
 		away = Color(0.35, 0.5, 0.75, 1),
 		offline = Color(0.35, 1, 1, 1)
@@ -225,7 +225,7 @@ if not HopHUD then
 			name_string = name
 		else
 			rank_level_string, color_ranges = managers.experience:gui_string(level or 0, type(rank) ~= "number" and 0 or rank, utf8.len(tostring(name)) + 2)
-			name_string = name .. " ("  .. rank_level_string .. ")"
+			name_string = name .. " (" .. rank_level_string .. ")"
 		end
 
 		if self.settings.name_labels.uppercase_names then
@@ -334,7 +334,7 @@ if not HopHUD then
 		return name, level, rank, color_id
 	end
 
-	Hooks:Add("HopLibOnUnitDamaged", "HopLibOnUnitDamagedHopHud", function (unit, damage_info)
+	Hooks:Add("HopLibOnUnitDamaged", "HopLibOnUnitDamagedHopHud", function(unit, damage_info)
 		if type(damage_info.damage) == "number" and damage_info.damage > 0 then
 			HopHUD:add_damage_pop(unit, damage_info)
 			if unit:character_damage():dead() then
@@ -343,7 +343,7 @@ if not HopHUD then
 		end
 	end)
 
-	Hooks:Add("HopLibOnMinionAdded", "HopLibOnMinionAddedHopHud", function (unit, player_unit)
+	Hooks:Add("HopLibOnMinionAdded", "HopLibOnMinionAddedHopHud", function(unit, player_unit)
 		if not HopHUD.settings.joker_colors then
 			return
 		end
