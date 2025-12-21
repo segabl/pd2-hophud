@@ -5,7 +5,7 @@ end
 local taken_colors = {}
 
 local character_color_id_by_unit_original = CriminalsManager.character_color_id_by_unit
-function CriminalsManager:character_color_id_by_unit(unit)
+function CriminalsManager:character_color_id_by_unit(unit, ...)
 	if managers.groupai and managers.groupai:state():is_unit_team_AI(unit) then
 		local name = unit:base()._tweak_table
 		if not taken_colors[name] then
@@ -25,7 +25,12 @@ function CriminalsManager:character_color_id_by_unit(unit)
 		end
 		return taken_colors[name] or #tweak_data.chat_colors
 	end
-	return character_color_id_by_unit_original(self, unit)
+	return character_color_id_by_unit_original(self, unit, ...)
+end
+
+local character_color_id_by_name_original = CriminalsManager.character_color_id_by_name
+function CriminalsManager:character_color_id_by_name(name, ...)
+	return taken_colors[name] or character_color_id_by_name_original(self, name, ...)
 end
 
 Hooks:PostHook(CriminalsManager, "remove_character_by_name", "remove_character_by_name_hophud", function (self, name)
